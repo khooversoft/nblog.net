@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Azure.DataLake.Model;
+using Toolbox.Services;
 
 namespace nBlogCmd.Application
 {
@@ -24,5 +25,7 @@ namespace nBlogCmd.Application
         public string? Folder { get; init; }
 
         public DataLakeStoreOption Store { get; init; } = null!;
+
+        public ISecretFilter SecretFilter { get; init; } = null!;
     }
 }
