@@ -1,0 +1,22 @@
+﻿{
+  "PackageFile": "{specFile}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "{locationFolder}/{specFile}",
+    "PackageVersion": "1.0.0.0",
+    "Title": "About Me",
+    "Author": "khoover",
+
+    "Tags": [
+      "me",
+      "principle"
+    ]
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "{specFile}.md"
+    }
+  ]
+}

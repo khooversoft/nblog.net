@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 using System.Threading;
+using Toolbox.Model;
 using Toolbox.Models;
 
 namespace Toolbox.Tools

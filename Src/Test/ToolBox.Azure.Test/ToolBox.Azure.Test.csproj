@@ -5,7 +5,7 @@
     <UserSecretsId>Toolbox.Test</UserSecretsId>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <UserSecretsId>nBlogCmd</UserSecretsId>
+    <UserSecretsId>nBlogCmd.Test</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

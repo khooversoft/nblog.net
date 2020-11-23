@@ -1,0 +1,13 @@
+﻿{
+  "SecretId": "nBlogCmd",
+  "build": true,
+
+  "SourceFolder": "D:\\Sources\\nBlog.net\\Src\\Test\\nBlogCmd.Test\\TestDocs",
+  "BuildFolder": "D:\\Work\\nBlogBuild",
+  "DeploymentFolder": "adls://nBlog/Release",
+
+  "Store": {
+    "AccountName": "devnblogstorage",
+    "ContainerName": "master"
+  }
+}

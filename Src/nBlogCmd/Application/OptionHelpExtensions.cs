@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Extensions;
 
 namespace nBlogCmd.Application
 {
@@ -12,47 +14,13 @@ namespace nBlogCmd.Application
         {
             return new[]
             {
-                "NBlog",
+                "nBlog CLI - Build Utility",
                 "",
                 "Help                  : Display help",
-                "List                  : List active models",
                 "",
-                "Upload a ML Model zip package to storage",
+                "Upload a Article Package(s) to storage",
                 "  Upload              : Upload command",
-                "  PackageFile={file}  : ML Model Package (Zip) file to upload, not used with SpecFile",
-                "  ModelName={name}    : Model's name, not used with SpecFile",
-                "  VersionId={name}    : Model's version, not used with SpecFile",
-                "  SpecFile={file}     : ML Package specification file, will provide PackageFile, ModelName, and VersionId",
-                "  Force               : (optional) Overwrite blob if already exist",
-                "",
-                "Download a ML Model zip package to storage",
-                "  Download            : Download command",
-                "  PackageFile={file}  : ML Model Package (Zip) file to upload",
-                "  ModelName={name}    : Model's name",
-                "  VersionId={name}    : Model's version",
-                "  Force               : (optional) Overwrite zip file if already exist",
-                "",
-                "Delete a ML Model in storage",
-                "  Delete              : Delete command",
-                "  ModelName={name}    : Model's name",
-                "  VersionId={name}    : Model's version",
-                "",
-                "Activate a ML Model to be executed by its host",
-                "  Activate            : Activate command",
-                "  ModelName={name}    : Model's name",
-                "  VersionId={name}    : Model's version",
-                "  HostName={name}     : Name of the host to run the ML model",
-                "",
-                "Bind a ML Model to a MlHost.",
-                "  Bind                : Bind command",
-                "  ModelName={name}    : Model's name",
-                "  VersionId={name}    : Model's version",
-                "  VsProject={path}    : Path of the VS Project for ASP.NET Core.",
-                "",
-                "Build Swagger JSON for Azure API Management.",
-                "  Swagger             : Swagger command",
-                "  ModelName={name}    : Model's name",
-                "  Environment={name}  : Environment name (Dev, APCT, Prod).",
+                "  PackageFile={file}  : Article Package to upload",
                 "",
                 "Build ML Package.",
                 "  Build               : Build command",
@@ -65,28 +33,21 @@ namespace nBlogCmd.Application
                 "  Store:ContainerName={container name}      : Azure Blob Storage container name (required)",
                 "  Store:AccountName={accountName}           : Azure Blob Storage account name (required)",
                 "  Store:AccountKey={accountKey}             : Azure Blob Storage account key (required)",
-                "",
-                "  If 'BlobStore:AccountKey' is not specified then key vault will be used to retrieve the account key.",
-                "    KeyVault:KeyVaultName={keyVaultName}    : Name of the Azure key vault (required if 'Store:AccountKey' is not specified",
-                "    KeyVault:KeyName={keyName}              : Name of the Azure key vault's key where the 'Store:AcountKey' is stored",
-                "",
-                "Model ID",
-               $"  Model name and version must match {VerifyExtensions.ValidPattern}.",
             };
         }
 
-        public static void DumpConfigurations(this IOption option)
+        public static void DumpConfigurations(this Option option, ILogger logger)
         {
             const int maxWidth = 80;
 
-            option.GetConfigValues()
-                .Select(x => "  " + x)
+            string line = option.GetConfigValues()
                 .Prepend(new string('=', maxWidth))
                 .Prepend("Current configurations")
-                .Prepend(string.Empty)
-                .Append(string.Empty)
-                .Append(string.Empty)
-                .ForEach(x => Console.WriteLine(option.SecretFilter?.FilterSecrets(x) ?? x));
+                .Aggregate(string.Empty, (a, x) => a += filter(x) + Environment.NewLine);
+
+            logger.LogInformation(line);
+
+            string filter(string line) => option.SecretFilter?.FilterSecrets(line) ?? line;
         }
     }
 }

@@ -1,0 +1,55 @@
+﻿using Microsoft.Extensions.Logging;
+using nBlogCmd.Application;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using Toolbox.Tools;
+using nBlog.sdk.ArticlePackage;
+using System.Threading;
+using Toolbox.Services;
+using Toolbox.Extensions;
+
+namespace nBlogCmd.Activities
+{
+    internal class BuildActivity
+    {
+        private readonly Option _option;
+        private readonly ILogger<BuildActivity> _logger;
+
+        public BuildActivity(Option option, ILogger<BuildActivity> logger)
+        {
+            _option = option;
+            _logger = logger;
+        }
+
+        public async Task Build(CancellationToken token)
+        {
+            Directory.Exists(_option.BuildFolder).VerifyAssert(x => x == true, $"{_option.BuildFolder} folder does not exist");
+
+            ActionBlock<string> activities = new ActionBlock<string>(x => BuildPackage(x, token), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 });
+
+            string[] specFilePaths = Directory.GetFiles(_option.SourceFolder!, "*.json", SearchOption.AllDirectories);
+
+            foreach (var filePath in specFilePaths)
+            {
+                await activities.SendAsync(filePath);
+            }
+
+            activities.Complete();
+            await activities.Completion;
+        }
+
+        private void BuildPackage(string specFilePath, CancellationToken token)
+        {
+            new ArticlePackageBuilder()
+                .SetSpecFile(specFilePath)
+                .SetLocationFolder(Path.GetDirectoryName(specFilePath)!.Substring(_option.SourceFolder!.Length + 1))
+                .SetBuildFolder(_option.BuildFolder!)
+                .Build(x => _logger.LogInformation($"Build: {specFilePath}, Count={x.Count}, Total={x.Total}"), token);
+        }
+    }
+}

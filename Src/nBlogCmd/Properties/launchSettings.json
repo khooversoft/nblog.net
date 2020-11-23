@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "nBlogCmd": {
+      "commandName": "Project",
+      "commandLineArgs": "environment=local"
+    }
+  }
+}

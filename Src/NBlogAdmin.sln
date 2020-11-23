@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBlogAdmin.Server", "NBlogAdmin\Server\NBlogAdmin.Server.csproj", "{005DB0A1-C119-4085-BC2D-040413DB223A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlogAdmin.Server", "nBlogAdmin\Server\NBlogAdmin.Server.csproj", "{005DB0A1-C119-4085-BC2D-040413DB223A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBlogAdmin.Client", "NBlogAdmin\Client\NBlogAdmin.Client.csproj", "{03081975-CD69-4A52-BCA0-10F9144376FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlogAdmin.Client", "nBlogAdmin\Client\NBlogAdmin.Client.csproj", "{03081975-CD69-4A52-BCA0-10F9144376FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBlogAdmin.Shared", "NBlogAdmin\Shared\NBlogAdmin.Shared.csproj", "{5B7F2938-533E-413A-B169-C3196C837D91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlogAdmin.Shared", "nBlogAdmin\Shared\NBlogAdmin.Shared.csproj", "{5B7F2938-533E-413A-B169-C3196C837D91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{975530DF-12EB-4E1C-80CB-FE7A5729E391}"
 EndProject
