@@ -32,14 +32,16 @@ namespace Toolbox.Azure.DataLake
             _fileSystem = _serviceClient.GetFileSystemClient(azureStoreOption.ContainerName);
         }
 
-        public async Task Delete(string path, CancellationToken token)
+        public async Task<bool> Delete(string path, CancellationToken token)
         {
             path.VerifyNotEmpty(nameof(path));
 
             _logger.LogTrace($"{nameof(Delete)} deleting {path}");
 
             DataLakeFileClient file = _fileSystem.GetFileClient(path);
-            await file.DeleteIfExistsAsync(cancellationToken: token);
+            Response<bool> response = await file.DeleteIfExistsAsync(cancellationToken: token);
+
+            return response.Value;
         }
 
         public async Task Download(string path, Stream toStream, CancellationToken token)

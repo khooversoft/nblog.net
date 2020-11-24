@@ -11,7 +11,7 @@ namespace Toolbox.Azure.DataLake
     {
         Task Append(string path, byte[] data, CancellationToken token);
 
-        Task Delete(string path, CancellationToken token);
+        Task<bool> Delete(string path, CancellationToken token);
 
         Task DeleteDirectory(string path, CancellationToken token);
 

@@ -32,14 +32,13 @@ namespace nBlogCmd.Application
             string? configFile = null;
             string? secretId = null;
             string? accountKey = null;
-            string? environment = null;
             Option? option = null;
 
             while (true)
             {
                 option = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
+                        .Func(x => GetEnvironmentConfig(option) switch { Stream v => x.AddJsonStream(v), _ => x })
                         .Func(x => configFile.ToNullIfEmpty() switch { string v => x.AddJsonFile(configFile), _ => x })
                         .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
                         .AddCommandLine(args.Concat(accountKey switch { string v => new[] { createAccountKeyCommand(accountKey) }, _ => Enumerable.Empty<string>() }).ToArray())
@@ -58,10 +57,6 @@ namespace nBlogCmd.Application
                     case Option v when v.SecretId.ToNullIfEmpty() != null && secretId == null:
                         secretId = v.SecretId;
                         continue;
-
-                    case Option v when environment == null:
-                        environment = option.Environment;
-                        continue;
                 }
 
                 break;
@@ -75,11 +70,11 @@ namespace nBlogCmd.Application
             static string createAccountKeyCommand(string value) => $"{nameof(option.Store)}:{nameof(option.Store.AccountKey)}=" + value;
         }
 
-        private Stream? GetEnvironmentConfig(string? environment)
+        private Stream? GetEnvironmentConfig(Option? option)
         {
-            if (environment == null) return null;
+            if (option?.Environment?.ToNullIfEmpty() == null) return null;
 
-            string resourceId = environment
+            string resourceId = option.Environment
                 .ToEnvironment()
                 .ToResourceId();
 

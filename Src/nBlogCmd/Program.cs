@@ -19,7 +19,7 @@ namespace nBlogCmd
     {
         private const int _ok = 0;
         private const int _error = 1;
-        private readonly string _programTitle = $"nBlog CLI Buid & Release - Version {Assembly.GetExecutingAssembly().GetName().Version}";
+        private readonly string _programTitle = $"nBlog CLI Build & Release - Version {Assembly.GetExecutingAssembly().GetName().Version}";
 
         static async Task<int> Main(string[] args)
         {
