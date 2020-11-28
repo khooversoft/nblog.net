@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using nBlog.sdk.ArticlePackage;
 using nBlog.sdk.Model;
 using nBlog.sdk.Services;
 using nBlog.sdk.Store;
@@ -26,7 +27,7 @@ namespace nBlog.Store.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            ArticlePayload? record = await _acticleStoreService.Get(id);
+            ArticlePayload? record = await _acticleStoreService.Get(ArticleId.FromBase64(id));
             if (record == null) return NotFound();
 
             return Ok(record);
@@ -35,6 +36,8 @@ namespace nBlog.Store.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ArticlePayload record)
         {
+            if (!record.IsValid()) return BadRequest();
+
             await _acticleStoreService.Set(record);
             return Ok();
         }
@@ -42,7 +45,7 @@ namespace nBlog.Store.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            bool status = await _acticleStoreService.Delete(id);
+            bool status = await _acticleStoreService.Delete(ArticleId.FromBase64(id));
             return status ? Ok() : NotFound();
         }
 

@@ -33,7 +33,7 @@ namespace nBlog.sdk
 
             services.AddSingleton<IArticlePackageActor, ArticlePackageActor>();
             services.AddSingleton<IArticleStoreService, ArticleStoreService>();
-            services.AddSingleton<IActicleStore, ArticleStore>();
+            services.AddSingleton<IArticleStore, ArticleStore>();
 
             return services;
         }

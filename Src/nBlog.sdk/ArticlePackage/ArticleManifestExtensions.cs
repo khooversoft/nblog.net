@@ -16,6 +16,8 @@ namespace nBlog.sdk.ArticlePackage
             subject.VerifyNotNull(nameof(subject));
 
             subject.ArticleId.VerifyNotEmpty($"{nameof(subject.ArticleId)} is required");
+            ArticleId.VerifyId(subject.ArticleId);
+
             subject.PackageVersion.VerifyNotEmpty($"{nameof(subject.PackageVersion)} is required");
             subject.Title.VerifyNotEmpty($"{nameof(subject.Title)} is required");
         }

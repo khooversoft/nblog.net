@@ -1,0 +1,21 @@
+﻿{
+  "PackageFile": "{articleId}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "articles/contact",
+    "Title": "Contact",
+    "Author": "Ghost Writer",
+    "Date": "2020-01-02T00:00:00",
+    "Tags": [
+      "Tag1",
+      "Tag2"
+    ]
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "{specFile}.md"
+    }
+  ]
+}

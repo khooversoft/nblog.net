@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Extensions;
 using Toolbox.Tools;
 
 namespace nBlog.sdk.ArticlePackage
@@ -29,6 +30,7 @@ namespace nBlog.sdk.ArticlePackage
         {
             subject.VerifyNotNull(nameof(subject));
 
+            subject.Id.VerifyNotEmpty(nameof(subject.Id));
             subject.PackagePayload.VerifyAssert(x => x?.Length > 0, $"{nameof(subject.PackagePayload)} is required");
             subject.Hash.VerifyNotEmpty($"{nameof(subject.Hash)} is required");
 
@@ -38,11 +40,32 @@ namespace nBlog.sdk.ArticlePackage
             Convert.ToBase64String(hash).VerifyAssert(x => x == subject.Hash, "Hash verification failed");
         }
 
+        public static bool IsValid(this ArticlePayload subject)
+        {
+            try
+            {
+                subject.Verify();
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+
         public static byte[] ToBytes(this ArticlePayload subject)
         {
             subject.Verify();
 
             return Convert.FromBase64String(subject.PackagePayload);
+        }
+
+        public static ArticlePayload ToArticlePayload(this byte[] subject)
+        {
+            subject.VerifyAssert(x => x?.Length > 0, $"{nameof(subject)} is empty");
+
+            ArticleManifest articleManifest = ReadManifest(subject);
+            return ToArticlePayload(subject, articleManifest.ArticleId);
         }
 
         public static ArticlePayload ToArticlePayload(this byte[] subject, string id)
@@ -52,7 +75,7 @@ namespace nBlog.sdk.ArticlePackage
 
             var payload = new ArticlePayload
             {
-                Id = id,
+                Id = ArticleId.ConvertTo(id),
                 PackagePayload = Convert.ToBase64String(subject),
                 Hash = Convert.ToBase64String(MD5.Create().ComputeHash(subject)),
             };
@@ -61,10 +84,11 @@ namespace nBlog.sdk.ArticlePackage
             return payload;
         }
 
-        public static ArticleManifest ReadManifest(this ArticlePayload subject)
-        {
-            byte[] payload = subject.ToBytes();
 
+        public static ArticleManifest ReadManifest(this ArticlePayload subject) => ReadManifest(subject.ToBytes());
+
+        public static ArticleManifest ReadManifest(this byte[] payload)
+        {
             using Stream payloadStream = new MemoryStream(payload);
             using var zipArchive = new ZipArchive(payloadStream, ZipArchiveMode.Read, false);
 

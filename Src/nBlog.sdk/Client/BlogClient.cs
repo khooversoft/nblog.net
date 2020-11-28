@@ -21,14 +21,14 @@ namespace nBlog.sdk.Client
             _logger = logger;
         }
 
-        public async Task<ArticlePayload?> Get(string id, CancellationToken token = default)
+        public async Task<ArticlePayload?> Get(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
             _logger.LogTrace($"{nameof(Get)}: Id={id}");
 
             try
             {
-                return await _httpClient.GetFromJsonAsync<ArticlePayload?>($"api/article/{id}", token);
+                return await _httpClient.GetFromJsonAsync<ArticlePayload?>($"api/article/{id.ToBase64()}", token);
             }
             catch (HttpRequestException ex)
             {
@@ -39,20 +39,19 @@ namespace nBlog.sdk.Client
 
         public async Task Set(ArticlePayload articlePayload, CancellationToken token = default)
         {
-            articlePayload
-                .VerifyNotNull(nameof(articlePayload));
+            articlePayload.VerifyNotNull(nameof(articlePayload));
 
             _logger.LogTrace($"{nameof(Set)}: Id={articlePayload.Id}");
 
             await _httpClient.PostAsJsonAsync("api/article", articlePayload, token);
         }
 
-        public async Task<bool> Delete(string id, CancellationToken token = default)
+        public async Task<bool> Delete(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
             _logger.LogTrace($"{nameof(Delete)}: Id={id}");
 
-            HttpResponseMessage response = await _httpClient.DeleteAsync($"api/article/{id}", token);
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"api/article/{id.ToBase64()}", token);
 
             return response.StatusCode switch
             {

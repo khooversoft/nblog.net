@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData1\Application.Contact.json" />
+    <None Remove="TestData1\Application.Contact.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData1\Application.Contact.json" />
+    <EmbeddedResource Include="TestData1\Application.Contact.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.9" />

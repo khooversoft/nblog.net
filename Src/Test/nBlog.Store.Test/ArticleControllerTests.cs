@@ -4,6 +4,7 @@ using nBlog.sdk.Model;
 using nBlog.Store.Test.Application;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace nBlog.Store.Test
             TestWebsiteHost host = TestApplication.GetHost();
 
             const string payload = "This is a test";
-            string id = $"{nameof(GivenFakePackage_WhenFullLifeCycle_ShouldPass)}.package";
+            string id = "fake1";
 
             byte[] bytes = Encoding.UTF8.GetBytes(payload);
 
@@ -27,7 +28,7 @@ namespace nBlog.Store.Test
 
             await host.BlogClient.Set(articlePayload);
 
-            ArticlePayload? readPayload = await host.BlogClient.Get(id);
+            ArticlePayload? readPayload = await host.BlogClient.Get((ArticleId)id);
             readPayload.Should().NotBeNull();
 
             (articlePayload == readPayload).Should().BeTrue();
@@ -37,43 +38,47 @@ namespace nBlog.Store.Test
 
             BatchSet<string> searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
-            searchList.Records.Any(x => x == id).Should().BeTrue();
+            searchList.Records.Any(x => x.StartsWith(id)).Should().BeTrue();
 
-            bool status = await host.BlogClient.Delete(id);
-            status.Should().BeTrue();
+            (await host.BlogClient.Delete((ArticleId)id)).Should().BeTrue();
 
             searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
-            searchList.Records.Any(x => x == id).Should().BeFalse();
+            searchList.Records.Any(x => x.StartsWith(id)).Should().BeFalse();
         }
 
         [Fact]
-        public async Task GivenFakePackage_WhenFullLifeCycleInFolder_ShouldPass()
+        public async Task GivenRealPackage_WhenFullLifeCycleInFolder_ShouldPass()
         {
             TestWebsiteHost host = TestApplication.GetHost();
 
-            const string payload = "This is a test";
-            string id = $"test1/{nameof(GivenFakePackage_WhenFullLifeCycleInFolder_ShouldPass)}.package";
+            string specFile = new TestResources().WriteTestData_1();
+            string buildFolder = Path.Combine(Path.GetTempPath(), nameof(nBlog), "build", Guid.NewGuid().ToString());
 
-            byte[] bytes = Encoding.UTF8.GetBytes(payload);
+            string packageFile = new ArticlePackageBuilder()
+                .SetSpecFile(specFile)
+                .SetBuildFolder(buildFolder)
+                .Build();
 
-            ArticlePayload articlePayload = bytes.ToArticlePayload(id);
+            byte[] packageBytes = File.ReadAllBytes(packageFile);
+            ArticlePayload articlePayload = packageBytes.ToArticlePayload();
 
             await host.BlogClient.Set(articlePayload);
 
-            ArticlePayload? readPayload = await host.BlogClient.Get(id);
+            ArticlePayload? readPayload = await host.BlogClient.Get((ArticleId)articlePayload.Id);
             readPayload.Should().NotBeNull();
 
             (articlePayload == readPayload).Should().BeTrue();
 
-            string payloadText = Encoding.UTF8.GetString(readPayload!.ToBytes());
-            payloadText.Should().Be(payload);
-
-            (await host.BlogClient.Delete(id)).Should().BeTrue();
-
             BatchSet<string> searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
-            searchList.Records.Any(x => x == id).Should().BeFalse();
+            searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeTrue();
+
+            (await host.BlogClient.Delete((ArticleId)articlePayload.Id)).Should().BeTrue();
+
+            searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
+            searchList.Should().NotBeNull();
+            searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeFalse();
         }
     }
 }

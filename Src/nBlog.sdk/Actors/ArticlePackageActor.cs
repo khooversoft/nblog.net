@@ -17,11 +17,11 @@ namespace nBlog.sdk.Actors
 {
     public class ArticlePackageActor : ActorBase, IArticlePackageActor
     {
-        private readonly IActicleStore _acticleStore;
+        private readonly IArticleStore _acticleStore;
         private readonly ILogger<ArticlePackageActor> _logger;
         private CacheObject<ArticlePayload> _cache = new CacheObject<ArticlePayload>(TimeSpan.FromMinutes(10));
 
-        public ArticlePackageActor(IActicleStore acticleStore, ILogger<ArticlePackageActor> logger)
+        public ArticlePackageActor(IArticleStore acticleStore, ILogger<ArticlePackageActor> logger)
         {
             _acticleStore = acticleStore;
             _logger = logger;
@@ -31,7 +31,7 @@ namespace nBlog.sdk.Actors
         {
             if (_cache.TryGetValue(out ArticlePayload? value)) return value;
 
-            ArticlePayload? articlePayload = await _acticleStore.Get(base.ActorKey.Value, token: token);
+            ArticlePayload? articlePayload = await _acticleStore.Get((ArticleId)base.ActorKey.Value, token: token);
 
             if (articlePayload == null) return null;
 
@@ -42,7 +42,7 @@ namespace nBlog.sdk.Actors
         public async Task Set(ArticlePayload articlePayload, CancellationToken token)
         {
             articlePayload.VerifyNotNull(nameof(articlePayload))
-                .VerifyAssert(x => articlePayload.Id.ToLower() == base.ActorKey.Value, "Id mismatch");
+                .VerifyAssert(x => articlePayload.Id.ToLower() == base.ActorKey.Value, $"Id mismatch - id={articlePayload.Id.ToLower()}, actorKey={ base.ActorKey.Value}");
 
             _logger.LogTrace($"{nameof(Set)}: Writing {articlePayload.Id}");
             await _acticleStore.Set(articlePayload, token);
@@ -54,7 +54,7 @@ namespace nBlog.sdk.Actors
         {
             _cache.Clear();
 
-            bool state = await _acticleStore.Delete(base.ActorKey.Value, token: token);
+            bool state = await _acticleStore.Delete((ArticleId)base.ActorKey.Value, token: token);
 
             await Deactivate();
             return state;

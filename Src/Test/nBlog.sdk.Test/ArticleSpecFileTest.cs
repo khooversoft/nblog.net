@@ -8,7 +8,7 @@ using Xunit;
 
 namespace nBlog.sdk.Test
 {
-    public class ArticleSpecFileTests
+    public class ArticleSpecFileTest
     {
         [Fact]
         public void GivenTestData_WhenBuildPackage_ShouldVerify()

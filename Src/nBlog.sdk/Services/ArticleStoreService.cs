@@ -15,19 +15,19 @@ namespace nBlog.sdk.Services
     public class ArticleStoreService : IArticleStoreService
     {
         public IActorHost? _actorHost;
-        private readonly IActicleStore _articleStore;
+        private readonly IArticleStore _articleStore;
 
-        public ArticleStoreService(IActorHost actorHost, IActicleStore articleStore)
+        public ArticleStoreService(IActorHost actorHost, IArticleStore articleStore)
         {
             _actorHost = actorHost;
             _articleStore = articleStore;
         }
 
-        public async Task<ArticlePayload?> Get(string id, CancellationToken token = default)
+        public async Task<ArticlePayload?> Get(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>((ActorKey)id);
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey((string)id));
             return await actor.Get(token);
         }
 
@@ -35,15 +35,15 @@ namespace nBlog.sdk.Services
         {
             record.VerifyNotNull(nameof(record));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>((ActorKey)record.Id);
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey(record.Id));
             await actor.Set(record, token);
         }
 
-        public async Task<bool> Delete(string id, CancellationToken token = default)
+        public async Task<bool> Delete(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>((ActorKey)id);
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey((string)id));
             return await actor.Delete(token);
         }
 

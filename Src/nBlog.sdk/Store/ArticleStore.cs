@@ -11,7 +11,7 @@ using Toolbox.Tools;
 
 namespace nBlog.sdk.Store
 {
-    public class ArticleStore : IActicleStore
+    public class ArticleStore : IArticleStore
     {
         private readonly IDataLakeStore _dataLakeStore;
         private readonly ILogger<ArticleStore> _logger;
@@ -22,21 +22,21 @@ namespace nBlog.sdk.Store
             _logger = logger;
         }
 
-        public async Task<bool> Delete(string id, CancellationToken token = default)
+        public async Task<bool> Delete(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
 
-            return await _dataLakeStore.Delete(id, token: token);
+            return await _dataLakeStore.Delete(ToFullFileName((string)id), token: token);
         }
 
-        public async Task<ArticlePayload?> Get(string id, CancellationToken token = default)
+        public async Task<ArticlePayload?> Get(ArticleId id, CancellationToken token = default)
         {
-            id.VerifyNotEmpty(nameof(id));
+            id.VerifyNotNull(nameof(id));
 
-            byte[] fileData = await _dataLakeStore.Read(id, token: token);
+            byte[] fileData = await _dataLakeStore.Read(ToFullFileName((string)id), token: token);
             if (fileData == null || fileData.Length == 0) return null;
 
-            return fileData.ToArticlePayload(id);
+            return fileData.ToArticlePayload();
         }
 
         public async Task<IReadOnlyList<string>> List(QueryParameters queryParameters, CancellationToken token = default) =>
@@ -51,7 +51,9 @@ namespace nBlog.sdk.Store
             articlePayload.VerifyNotNull(nameof(articlePayload));
 
             _logger.LogTrace($"{nameof(Set)}: Writing {articlePayload.Id}");
-            await _dataLakeStore.Write(articlePayload.Id, articlePayload.ToBytes(), true, token);
+            await _dataLakeStore.Write(ToFullFileName(articlePayload.Id), articlePayload.ToBytes(), true, token);
         }
+
+        private static string ToFullFileName(string id) => id + ".articlePackage";
     }
 }

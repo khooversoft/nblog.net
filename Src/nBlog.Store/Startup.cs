@@ -26,7 +26,7 @@ namespace nBlog.Store
 
             // Setup ADLS services
             services.AddSingleton<IDataLakeStore, DataLakeStore>();
-            services.AddSingleton<IActicleStore, ArticleStore>();
+            services.AddSingleton<IArticleStore, ArticleStore>();
 
             // Setup Actor Service
             services.AddArticleServiceActorHost();
