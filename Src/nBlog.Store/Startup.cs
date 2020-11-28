@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using nBlog.sdk.Actors;
+using nBlog.sdk;
+using nBlog.sdk.Store;
 using NSwag;
 using System;
 using Toolbox.Azure.DataLake;
@@ -25,6 +26,7 @@ namespace nBlog.Store
 
             // Setup ADLS services
             services.AddSingleton<IDataLakeStore, DataLakeStore>();
+            services.AddSingleton<IActicleStore, ArticleStore>();
 
             // Setup Actor Service
             services.AddArticleServiceActorHost();

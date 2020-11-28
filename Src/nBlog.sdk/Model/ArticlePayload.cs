@@ -8,6 +8,8 @@ namespace nBlog.sdk.Model
 {
     public record ArticlePayload
     {
+        public string Id { get; init; } = null!;
+
         public string PackagePayload { get; init; } = null!;
 
         public string Hash { get; set; } = null!;

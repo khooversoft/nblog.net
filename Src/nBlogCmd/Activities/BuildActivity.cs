@@ -47,7 +47,6 @@ namespace nBlogCmd.Activities
         {
             new ArticlePackageBuilder()
                 .SetSpecFile(specFilePath)
-                .SetLocationFolder(Path.GetDirectoryName(specFilePath)!.Substring(_option.SourceFolder!.Length + 1))
                 .SetBuildFolder(_option.BuildFolder!)
                 .Build(x => _logger.LogInformation($"Build: {specFilePath}, Count={x.Count}, Total={x.Total}"), token);
         }

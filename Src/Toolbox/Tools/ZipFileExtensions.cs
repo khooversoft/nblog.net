@@ -52,7 +52,6 @@ namespace Toolbox.Tools
             {
                 filePath.VerifyNotEmpty(nameof(filePath));
 
-                Path.GetDirectoryName(filePath)?.Action(x => Directory.Delete(x));
                 ZipArchiveEntry.ExtractToFile(filePath, true);
             }
         }

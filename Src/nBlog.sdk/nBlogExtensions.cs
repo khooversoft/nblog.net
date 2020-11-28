@@ -1,24 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using nBlog.sdk.Actors;
 using nBlog.sdk.Services;
-using System;
+using nBlog.sdk.Store;
 using Toolbox.Actor.Host;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.Actors
+namespace nBlog.sdk
 {
-    public static class ActicleActorExtensions
+    public static class nBlogExtensions
     {
-        public static IActorHost AddArticleServiceActors(this IActorHost actorHost, IServiceProvider serviceProvider)
-        {
-            actorHost.VerifyNotNull(nameof(actorHost));
-            serviceProvider.VerifyNotNull(nameof(serviceProvider));
-
-            actorHost.Register<IArticlePackageActor>(() => serviceProvider.GetRequiredService<IArticlePackageActor>());
-
-            return actorHost;
-        }
-
         public static IServiceCollection AddArticleServiceActorHost(this IServiceCollection services, int capacity = 10000)
         {
             services.VerifyNotNull(nameof(services));
@@ -28,7 +19,7 @@ namespace nBlog.sdk.Actors
                 ILoggerFactory loggerFactory = x.GetRequiredService<ILoggerFactory>();
 
                 IActorHost host = new ActorHost(capacity, loggerFactory);
-                host.AddArticleServiceActors(x);
+                host.Register<IArticlePackageActor>(() => x.GetRequiredService<IArticlePackageActor>());
 
                 return host;
             });
@@ -41,7 +32,8 @@ namespace nBlog.sdk.Actors
             services.VerifyNotNull(nameof(services));
 
             services.AddSingleton<IArticlePackageActor, ArticlePackageActor>();
-            services.AddSingleton<IArticleStore, ArticleStore>();
+            services.AddSingleton<IArticleStoreService, ArticleStoreService>();
+            services.AddSingleton<IActicleStore, ArticleStore>();
 
             return services;
         }

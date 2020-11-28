@@ -18,7 +18,6 @@ namespace nBlog.sdk.ArticlePackage
         private string _specFile = null!;
         private string _specFileBase = null!;
         private string _buildFolder = null!;
-        private string _locationFolder = null!;
 
         public static string ManifestFileName { get; } = "articlePackage.manifest.json";
 
@@ -38,16 +37,13 @@ namespace nBlog.sdk.ArticlePackage
 
         public ArticlePackageBuilder SetBuildFolder(string buildFolder) => this.Action(x => _buildFolder = buildFolder);
 
-        public ArticlePackageBuilder SetLocationFolder(string locationFolder) => this.Action(x => _locationFolder = locationFolder);
-
-        public int Build(Action<FileActionProgress>? monitor = null, CancellationToken token = default)
+        public string Build(Action<FileActionProgress>? monitor = null, CancellationToken token = default)
         {
             _specFile.VerifyNotEmpty("Specification file not read");
             _specFileBase.VerifyNotEmpty("Specification file not read");
             _buildFolder.VerifyNotEmpty("Deployment folder not specified");
-            _locationFolder.VerifyNotEmpty("Location folder not specified");
 
-            ArticleSpec = ReadPackageSpec(_specFile);
+            ArticleSpec = new ArticleSpecFile(_specFile).Read();
 
             ArticleSpec
                 .VerifyNotNull("Option is required")
@@ -57,13 +53,13 @@ namespace nBlog.sdk.ArticlePackage
                 .Append(WriteManifest())
                 .ToArray();
 
-            string zipFilePath = Path.Combine(_buildFolder, _locationFolder, ArticleSpec.PackageFile);
+            string zipFilePath = Path.Combine(_buildFolder, ArticleSpec.PackageFile);
 
             Directory.CreateDirectory(Path.GetDirectoryName(zipFilePath)!);
 
             new ZipFile(zipFilePath).CompressFiles(token, monitor, files);
 
-            return files.Length;
+            return zipFilePath;
         }
 
         private CopyTo[] GetFiles()
@@ -88,46 +84,9 @@ namespace nBlog.sdk.ArticlePackage
             return files;
         }
 
-        public ArticleSpec ReadPackageSpec(string filePath)
-        {
-            filePath
-                .VerifyNotEmpty(nameof(filePath))
-                .VerifyAssert(x => File.Exists(x), $"{filePath} does not exist");
-
-            string subject = File.ReadAllText(filePath)
-                .VerifyNotEmpty($"{filePath} is empty");
-
-            ArticleSpec spec = Json.Default.Deserialize<ArticleSpec>(subject)
-                .VerifyNotNull($"File {filePath} is not a valid spec format");
-
-            spec.Verify();
-
-            IPropertyResolver resolver = GetResolver();
-
-            return new ArticleSpec
-            {
-                PackageFile = resolver.Resolve(spec.PackageFile),
-
-                Manifest = new ArticleManifest
-                {
-                    ArticleId = resolver.Resolve(spec.Manifest.ArticleId),
-                    PackageVersion = resolver.Resolve(spec.Manifest.PackageVersion),
-                    Title = resolver.Resolve(spec.Manifest.Title),
-                    Author = resolver.Resolve(spec.Manifest.Author),
-                    Tags = spec.Manifest?.Tags?.Select(x => resolver.Resolve(x))?.ToList(),
-                },
-
-                Copy = spec.Copy.Select(x => new CopyTo
-                {
-                    Source = resolver.Resolve(x.Source),
-                    Destination = resolver.Resolve(x.Destination),
-                }).ToList(),
-            };
-        }
-
         private CopyTo WriteManifest()
         {
-            string filePath = Path.Combine(Path.GetTempPath(), ManifestFileName);
+            string filePath = Path.Combine(_specFileBase, ManifestFileName);
             ArticleSpec.Manifest.WriteToFile(filePath);
 
             return new CopyTo
@@ -135,17 +94,6 @@ namespace nBlog.sdk.ArticlePackage
                 Source = filePath,
                 Destination = ManifestFileName,
             };
-        }
-
-        private IPropertyResolver GetResolver()
-        {
-            return new (string Key, string Value)[]
-            {
-                ("specFile", Path.GetFileNameWithoutExtension(_specFile)),
-                ("locationFolder", _locationFolder),
-            }
-            .Select(x => new KeyValuePair<string, string>(x.Key, x.Value))
-            .Func(x => new PropertyResolver(x));
         }
     }
 }

@@ -1,28 +1,28 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace nBlog.Store.Test.Application
 {
-    public static class TestApplication
+    internal static class TestApplication
     {
         private static ILoggerFactory? _loggerFactory;
+        private static TestWebsiteHost? _host;
+        private static object _lock = new object();
 
-        internal static TestHost DefaultHost { get; } = new TestHost(GetLoggerFactory(), RunEnvironment.Local);
-
-        internal static TestHost SearchHost { get; } = new TestHost(GetLoggerFactory(), RunEnvironment.Local, "dev.pathFinder-test-search");
-
-        internal static TestHost DevHost { get; } = new TestHost(GetLoggerFactory(), RunEnvironment.Dev);
-
-        public static void Shutdown()
+        public static TestWebsiteHost GetHost()
         {
-            DefaultHost.ShutdownHost();
-            SearchHost.ShutdownHost();
-            DevHost.ShutdownHost();
+            lock (_lock)
+            {
+                if (_host != null) return _host;
+
+                _host = new TestWebsiteHost(LoggerFactory.Create(x => x.AddDebug()).CreateLogger<TestWebsiteHost>());
+                _host.StartApiServer();
+
+                return _host;
+            }
         }
+
+        public static void Shutdown() => Interlocked.Exchange(ref _host, null)?.Shutdown();
 
         public static ILoggerFactory GetLoggerFactory() => _loggerFactory ??= LoggerFactory.Create(x =>
         {

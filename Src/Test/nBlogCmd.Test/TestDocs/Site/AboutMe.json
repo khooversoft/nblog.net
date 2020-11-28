@@ -1,8 +1,8 @@
 ﻿{
-  "PackageFile": "{specFile}.articlePackage",
+  "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "{locationFolder}/{specFile}",
+    "ArticleId": "site/aboutMe",
     "PackageVersion": "1.0.0.0",
     "Title": "About Me",
     "Author": "khoover",

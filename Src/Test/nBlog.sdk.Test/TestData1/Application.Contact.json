@@ -2,14 +2,13 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/benchMarkDotNet",
-    "PackageVersion": "1.0.0.0",
-    "Title": "About Me",
-    "Author": "khoover",
-
+    "ArticleId": "articles/contact",
+    "Title": "Contact",
+    "Author": "Ghost Writer",
+    "Date": "2020-01-02T00:00:00",
     "Tags": [
-      ".Net",
-      "performance"
+      "Tag1",
+      "Tag2"
     ]
   },
 

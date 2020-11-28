@@ -18,15 +18,15 @@ namespace Toolbox.Tools
             _zipFilePath = zipFilePath;
         }
 
-        public string ExtractZipToTempDirectory(CancellationToken token)
+        public string ExpandToTempFile(CancellationToken token)
         {
             string toFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), Path.GetFileNameWithoutExtension(_zipFilePath));
-            ExtractFromZipFile(toFolder, token);
+            ExpandFiles(toFolder, token);
 
             return toFolder;
         }
 
-        public void ExtractFromZipFile(string toFolder, CancellationToken token, Action<FileActionProgress>? monitor = null)
+        public void ExpandFiles(string toFolder, CancellationToken token, Action<FileActionProgress>? monitor = null)
         {
             _zipFilePath.VerifyAssert(x => File.Exists(x), $"{_zipFilePath} does not exist");
 

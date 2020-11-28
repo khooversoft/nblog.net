@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using nBlog.sdk.ArticlePackage;
 using nBlog.sdk.Model;
+using nBlog.sdk.Services;
+using nBlog.sdk.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,46 +17,44 @@ namespace nBlog.sdk.Actors
 {
     public class ArticlePackageActor : ActorBase, IArticlePackageActor
     {
-        private readonly IDataLakeStore _dataLakeStore;
+        private readonly IActicleStore _acticleStore;
         private readonly ILogger<ArticlePackageActor> _logger;
-        private CacheObject<ArticlePayload> _recordCache = new CacheObject<ArticlePayload>(TimeSpan.FromMinutes(10));
+        private CacheObject<ArticlePayload> _cache = new CacheObject<ArticlePayload>(TimeSpan.FromMinutes(10));
 
-        public ArticlePackageActor(IDataLakeStore dataLakeStore, ILogger<ArticlePackageActor> logger)
+        public ArticlePackageActor(IActicleStore acticleStore, ILogger<ArticlePackageActor> logger)
         {
-            _dataLakeStore = dataLakeStore;
+            _acticleStore = acticleStore;
             _logger = logger;
         }
 
         public async Task<ArticlePayload?> Get(CancellationToken token)
         {
-            if (_recordCache.TryGetValue(out ArticlePayload value)) return value;
+            if (_cache.TryGetValue(out ArticlePayload? value)) return value;
 
-            byte[] fileData = await _dataLakeStore.Read(base.ActorKey.Value, token: token);
-            if (fileData == null || fileData.Length == 0) return null;
+            ArticlePayload? articlePayload = await _acticleStore.Get(base.ActorKey.Value, token: token);
 
-            ArticlePayload articlePayload = fileData.ToArticlePayload();
+            if (articlePayload == null) return null;
 
-            _recordCache.Set(articlePayload);
+            _cache.Set(articlePayload);
             return articlePayload;
         }
 
         public async Task Set(ArticlePayload articlePayload, CancellationToken token)
         {
-            articlePayload
-                .VerifyNotNull(nameof(articlePayload))
-                .VerifyAssert(x => articlePayload.ReadManifest().ArticleId == base.ActorKey.Value, "Id mismatch");
+            articlePayload.VerifyNotNull(nameof(articlePayload))
+                .VerifyAssert(x => articlePayload.Id.ToLower() == base.ActorKey.Value, "Id mismatch");
 
-            _logger.LogTrace($"{nameof(Set)}: Writing {articlePayload}");
-            await _dataLakeStore.Write(base.ActorKey.Value, articlePayload.ToBytes(), true, token);
+            _logger.LogTrace($"{nameof(Set)}: Writing {articlePayload.Id}");
+            await _acticleStore.Set(articlePayload, token);
 
-            _recordCache.Set(articlePayload);
+            _cache.Set(articlePayload);
         }
 
         public async Task<bool> Delete(CancellationToken token)
         {
-            _recordCache.Clear();
+            _cache.Clear();
 
-            bool state = await _dataLakeStore.Delete(base.ActorKey.Value, token: token);
+            bool state = await _acticleStore.Delete(base.ActorKey.Value, token: token);
 
             await Deactivate();
             return state;

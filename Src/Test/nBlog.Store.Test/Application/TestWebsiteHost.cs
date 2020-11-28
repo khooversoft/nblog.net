@@ -1,11 +1,19 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using nBlog.sdk.Client;
+using nBlog.Store.Application;
+using nBlog.Store.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Toolbox.Model;
 
 namespace nBlog.Store.Test.Application
 {
@@ -15,22 +23,17 @@ namespace nBlog.Store.Test.Application
         protected HttpClient? _client;
         private readonly ILogger<TestWebsiteHost> _logger;
 
-        public TestWebsiteHost(ILogger<TestWebsiteHost> logger)
-        {
-            _logger = logger;
-        }
+        public TestWebsiteHost(ILogger<TestWebsiteHost> logger) => _logger = logger;
 
         public HttpClient Client => _client ?? throw new ArgumentNullException(nameof(Client));
 
         public T Resolve<T>() where T : class => _host?.Services.GetService<T>() ?? throw new InvalidOperationException($"Cannot find service {typeof(T).Name}");
 
-        public PathFinderClient PathFinderClient => new PathFinderClient(Client, Resolve<ILoggerFactory>().CreateLogger<PathFinderClient>());
+        public BlogClient BlogClient => new BlogClient(Client, Resolve<ILoggerFactory>().CreateLogger<BlogClient>());
 
-        public TestWebsiteHost StartApiServer(RunEnvironment runEnvironment, string? databaseName = null)
+        public TestWebsiteHost StartApiServer()
         {
-            _logger.LogInformation($"{nameof(StartApiServer)}: runEnvironment={runEnvironment}, databaseName={databaseName}");
-
-            IOption option = GetOption(runEnvironment, databaseName);
+            Option option = GetOption();
 
             var host = new HostBuilder()
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -42,15 +45,12 @@ namespace nBlog.Store.Test.Application
                 .ConfigureLogging(builder => builder.AddDebug())
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services
-                        .AddSingleton(option)
-                        .AddSingleton<ICosmosPathFinderOption>(option.Store);
+                    services.AddSingleton(option);
+                    services.AddSingleton(option.Store);
                 });
 
             _host = host.Start();
             _client = _host.GetTestServer().CreateClient();
-
-            InitializeDatabase(_host, option).Wait();
             return this;
         }
 
@@ -75,41 +75,17 @@ namespace nBlog.Store.Test.Application
             }
         }
 
-        private IOption GetOption(RunEnvironment runEnvironment, string? databaseName)
+        private Option GetOption()
         {
-            string tempFile = $"PathFinder.Server.Test.{runEnvironment}.{(databaseName ?? "default")}";
-            string packageFile = FileTools.WriteResourceToTempFile(tempFile, nameof(TestWebsiteHost), typeof(TestWebsiteHost), GetResourceId());
-
-            string[] args = new string?[]
+            string[] args = new string[]
             {
-                $"ConfigFile={packageFile}",
-                !databaseName.IsEmpty() ? $"Store:DatabaseName={databaseName}" : null,
-            }
-            .Where(x => x != null)
-            .ToArray()!;
+                "Environment=local",
+                "SecretId=nBlogCmd",
+            };
 
             return new OptionBuilder()
                 .SetArgs(args)
                 .Build();
-
-            string GetResourceId() => runEnvironment switch
-            {
-                RunEnvironment.Local => "PathFinder.Server.Test.Application.Local-Config.json",
-                RunEnvironment.Dev => "PathFinder.Server.Test.Application.Dev-Config.json",
-
-                _ => throw new InvalidOperationException($"{runEnvironment} is not supported"),
-            };
-        }
-
-        private static async Task InitializeDatabase(IHost host, IOption option)
-        {
-            if (!option.InitializeDatabase) return;
-
-            CancellationToken token = new CancellationTokenSource(TimeSpan.FromMinutes(5)).Token;
-            using var scope = host.Services.CreateScope();
-
-            await scope.ServiceProvider.GetRequiredService<IPathFinderStore>()
-                .InitializeContainers(token);
         }
     }
 }

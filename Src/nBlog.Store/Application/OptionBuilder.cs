@@ -38,7 +38,7 @@ namespace nBlog.Store.Application
                 .ToArray();
 
             string? secretId = null;
-            Option option = new Option();
+            Option? option = null;
 
             // Because ordering or placement on critical configuration can different, loop through a process
             // of building the correct configuration.  Pattern cases below are in priority order.
@@ -54,7 +54,7 @@ namespace nBlog.Store.Application
 
                 switch (option)
                 {
-                    case Option v when v.SecretId.IsEmpty() && secretId == null:
+                    case Option v when !v.SecretId.IsEmpty() && secretId == null:
                         secretId = v.SecretId;
                         continue;
                 }

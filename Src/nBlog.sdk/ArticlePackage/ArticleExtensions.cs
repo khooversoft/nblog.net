@@ -25,53 +25,40 @@ namespace nBlog.sdk.ArticlePackage
                 .VerifyAssert(x => x.Count > 0, $"{nameof(subject.Copy)} has is empty");
         }
 
-        public static void Verify(this ArticleManifest subject)
-        {
-            subject.VerifyNotNull(nameof(subject));
-
-            subject.ArticleId.VerifyNotEmpty($"{nameof(subject.ArticleId)} is required");
-            subject.PackageVersion.VerifyNotEmpty($"{nameof(subject.PackageVersion)} is required");
-            subject.Title.VerifyNotEmpty($"{nameof(subject.Title)} is required");
-        }
-
-        public static void WriteToFile(this ArticleManifest mlPackageManifest, string filePath)
-        {
-            filePath.VerifyNotEmpty(nameof(filePath));
-
-            mlPackageManifest.Verify();
-            string json = Json.Default.SerializeFormat(mlPackageManifest);
-            File.WriteAllText(filePath, json);
-        }
-
         public static void Verify(this ArticlePayload subject)
         {
             subject.VerifyNotNull(nameof(subject));
 
             subject.PackagePayload.VerifyAssert(x => x?.Length > 0, $"{nameof(subject.PackagePayload)} is required");
             subject.Hash.VerifyNotEmpty($"{nameof(subject.Hash)} is required");
+
+            byte[] packagePayload = Convert.FromBase64String(subject.PackagePayload);
+            byte[] hash = MD5.Create().ComputeHash(packagePayload);
+
+            Convert.ToBase64String(hash).VerifyAssert(x => x == subject.Hash, "Hash verification failed");
         }
 
         public static byte[] ToBytes(this ArticlePayload subject)
         {
             subject.Verify();
 
-            byte[] packagePayload = Convert.FromBase64String(subject.PackagePayload);
-            byte[] hash = MD5.Create().ComputeHash(packagePayload);
-
-            Convert.ToBase64String(hash).VerifyAssert(x => x == subject.Hash, "Hash verification failed");
-
-            return packagePayload;
+            return Convert.FromBase64String(subject.PackagePayload);
         }
 
-        public static ArticlePayload ToArticlePayload(this byte[] subject)
+        public static ArticlePayload ToArticlePayload(this byte[] subject, string id)
         {
             subject.VerifyAssert(x => x?.Length > 0, $"{nameof(subject)} is empty");
+            id.VerifyNotEmpty(nameof(id));
 
-            return new ArticlePayload
+            var payload = new ArticlePayload
             {
+                Id = id,
                 PackagePayload = Convert.ToBase64String(subject),
                 Hash = Convert.ToBase64String(MD5.Create().ComputeHash(subject)),
             };
+
+            payload.Verify();
+            return payload;
         }
 
         public static ArticleManifest ReadManifest(this ArticlePayload subject)
