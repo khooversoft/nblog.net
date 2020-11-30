@@ -31,7 +31,7 @@ namespace nBlogCmd.Application
 
             string? configFile = null;
             string? secretId = null;
-            string? accountKey = null;
+            //string? accountKey = null;
             Option? option = null;
 
             while (true)
@@ -41,7 +41,7 @@ namespace nBlogCmd.Application
                         .Func(x => GetEnvironmentConfig(option) switch { Stream v => x.AddJsonStream(v), _ => x })
                         .Func(x => configFile.ToNullIfEmpty() switch { string v => x.AddJsonFile(configFile), _ => x })
                         .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
-                        .AddCommandLine(args.Concat(accountKey switch { string v => new[] { createAccountKeyCommand(accountKey) }, _ => Enumerable.Empty<string>() }).ToArray())
+                        //.AddCommandLine(args.Concat(accountKey switch { string v => new[] { createAccountKeyCommand(accountKey) }, _ => Enumerable.Empty<string>() }).ToArray())
                         .Build()
                         .Bind<Option>();
 
@@ -62,12 +62,13 @@ namespace nBlogCmd.Application
                 break;
             }
 
-            option = option with { SecretFilter = new SecretFilter(new[] { option.Store.AccountKey }), RunEnvironment = option.Environment.ToEnvironment() };
+            option = option with { SecretFilter = new SecretFilter(), RunEnvironment = option.Environment.ToEnvironment() };
+            //option = option with { SecretFilter = new SecretFilter(new[] { option.Store.AccountKey }), RunEnvironment = option.Environment.ToEnvironment() };
             option.Verify();
 
             return option;
 
-            static string createAccountKeyCommand(string value) => $"{nameof(option.Store)}:{nameof(option.Store.AccountKey)}=" + value;
+            //static string createAccountKeyCommand(string value) => $"{nameof(option.Store)}:{nameof(option.Store.AccountKey)}=" + value;
         }
 
         private Stream? GetEnvironmentConfig(Option? option)

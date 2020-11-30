@@ -1,0 +1,27 @@
+﻿@using nBlog.sdk.Model;
+@using Toolbox.Extensions;
+
+<div class="card mb-3">
+    <div class="row no-gutters">
+        <div class="col-md-4 p-md-2">
+            <img src="@Manifest.ImageName" class="card-img" />
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <NavLink href="">@Manifest.Title</NavLink>                
+                </h4>
+                <p>@AuthorText</p>
+                <p class="card-text">@Manifest.Summary</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public ArticleManifest Manifest { get; set; }
+
+    private string AuthorText => (Manifest.Author.IsEmpty() ? string.Empty : Manifest.Author + " ") + Manifest.Date.ToString("MMMM dd, yyyy");
+}

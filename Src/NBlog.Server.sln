@@ -23,9 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlog.sdk.Test", "Test\nBlo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlogCmd.Test", "Test\nBlogCmd.Test\nBlogCmd.Test.csproj", "{7F903C4E-34C4-4DC8-B351-C2908A0B8AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nBlog.Store", "nBlog.Store\nBlog.Store.csproj", "{73C05DE5-0730-4DCC-B78B-5083F857E796}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlog.Store", "nBlog.Store\nBlog.Store.csproj", "{73C05DE5-0730-4DCC-B78B-5083F857E796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nBlog.Store.Test", "Test\nBlog.Store.Test\nBlog.Store.Test.csproj", "{FE08FE3A-3F8C-4AC7-9D4A-019AEF5B55C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nBlog.Store.Test", "Test\nBlog.Store.Test\nBlog.Store.Test.csproj", "{FE08FE3A-3F8C-4AC7-9D4A-019AEF5B55C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

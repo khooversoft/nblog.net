@@ -1,0 +1,46 @@
+﻿<div class="top-row px-4 fixed-top">
+    <div class="container">
+        <nav class="navbar justify-content-between">
+            <div class="row">
+                <a class="btn-link-icon" href="">
+                    <img src="/Images/khicon.svg" class="img-fluid program-icon" />
+                </a>
+                <div>
+                    <ul style="list-style-type:none;margin:0px;padding:0px;">
+                        <li class="font-weight-bold">Exploration</li>
+                        <li class="font-weight-bold program-color">Experimentation</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-inline">
+                @if (!ShowSearch)
+                {
+                    <NavLink class="program-top-menu-item program-color" href="">Home</NavLink>
+                    <NavLink class="program-top-menu-item" href="">Articles</NavLink>
+                    <NavLink class="program-top-menu-item" href="">Projects</NavLink>
+                    <NavLink class="program-top-menu-item" href="">For Hire</NavLink>
+                    <NavLink class="program-top-menu-item" href="">Contact</NavLink>
+
+                    <NavLink @onclick="ToggleCollapse" href=""><span class="oi oi-magnifying-glass program-color"></span></NavLink>
+                }
+                else
+                {
+                    <div>
+                        <SearchBar />
+                        <NavLink class="btn btn-outline-secondary" @onclick="ToggleCollapse">Cancel</NavLink>
+                    </div>
+                }
+            </div>
+        </nav>
+    </div>
+</div>
+
+@code {
+    //private string topBarClass => "top-row px-4 " + (showSearch ? "top-row-with-search" : string.Empty);
+
+    //private string searchClass => (showSearch ? string.Empty : "collapse") + " row form-inline form-group mt-md-2 ml-md-1 mr-md-1";
+
+    private bool ShowSearch { get; set; } = false;
+
+    private void ToggleCollapse() => ShowSearch = !ShowSearch;
+}

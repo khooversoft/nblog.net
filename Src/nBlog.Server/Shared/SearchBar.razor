@@ -1,0 +1,20 @@
+﻿<input class="form-control" style="width:500px" type="text" placeholder="Enter search..." @oninput="@(x => OnSearchTextChange(x.Value?.ToString() ?? string.Empty))" />
+<button class="@SearchButtonClass" type="submit" @onclick="OnSearchClick" disabled="@(!IsSearchEnabled)">Search</button>
+
+@code {
+    private string SearchText { get; set; } = string.Empty;
+
+    public string SearchButtonClass => "btn ml-md-2 " + (IsSearchEnabled ? "btn-outline-success program-color" : "btn-outline-secondary text-muted disabled");
+
+    private void OnSearchTextChange(string value)
+    {
+        SearchText = value;
+    }
+
+    private Task OnSearchClick()
+    {
+        return Task.CompletedTask;
+    }
+
+    private bool IsSearchEnabled => SearchText?.Length > 0;
+}

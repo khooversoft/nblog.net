@@ -28,8 +28,20 @@ namespace nBlogCmd.Activities
 
         public async Task Build(CancellationToken token)
         {
-            Directory.Exists(_option.BuildFolder).VerifyAssert(x => x == true, $"{_option.BuildFolder} folder does not exist");
+            ClearBuildFolder();
+            await RunBuild(token);
+        }
 
+        private void ClearBuildFolder()
+        {
+            _option.BuildFolder.VerifyNotEmpty($"{nameof(_option.BuildFolder)} not specified");
+
+            if (Directory.Exists(_option.BuildFolder)) Directory.Delete(_option.BuildFolder, true);
+            Directory.CreateDirectory(_option.BuildFolder);
+        }
+
+        private async Task RunBuild(CancellationToken token)
+        {
             ActionBlock<string> activities = new ActionBlock<string>(x => BuildPackage(x, token), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 });
 
             string[] specFilePaths = Directory.GetFiles(_option.SourceFolder!, "*.json", SearchOption.AllDirectories);

@@ -10,7 +10,7 @@ using Toolbox.Tools;
 
 namespace nBlog.sdk.Client
 {
-    public class BlogClient
+    public class BlogClient : IBlogClient
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;

@@ -15,7 +15,7 @@ namespace nBlogCmd.Application
         public string? BuildFolder { get; init; }
 
         public bool Upload { get; init; }
-        public DataLakeStoreOption? Store { get; init; }
+        public string BlogStoreUrl { get; init; } = null!;
 
         public string Environment { get; init; } = null!;
         public RunEnvironment RunEnvironment { get; init; }

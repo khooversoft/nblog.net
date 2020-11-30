@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using nBlog.sdk.Client;
 using nBlogCmd.Activities;
 using nBlogCmd.Application;
 using System;
@@ -92,15 +93,21 @@ namespace nBlogCmd
 
         private ServiceProvider BuildContainer(Option option)
         {
-            return new ServiceCollection()
-                .AddLogging(x =>
-                {
-                    x.AddConsole();
-                    x.AddDebug();
-                })
-                .AddSingleton(option)
-                .AddSingleton<BuildActivity>()
-                .BuildServiceProvider();
+            var service = new ServiceCollection();
+
+
+            service.AddLogging(x =>
+            {
+                x.AddConsole();
+                x.AddDebug();
+            });
+
+            service.AddSingleton(option);
+            service.AddSingleton<BuildActivity>();
+
+            service.AddHttpClient<IBlogClient, BlogClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
+
+            return service.BuildServiceProvider();
         }
     }
 }
