@@ -8,7 +8,6 @@ namespace nBlogCmd.Application
     {
         public bool Help { get; init; }
         public string? SecretId { get; init; }
-        public string? ConfigFile { get; init; }
 
         public bool Build { get; init; }
         public string? SourceFolder { get; init; }
@@ -19,7 +18,5 @@ namespace nBlogCmd.Application
 
         public string Environment { get; init; } = null!;
         public RunEnvironment RunEnvironment { get; init; }
-
-        public ISecretFilter SecretFilter { get; init; } = null!;
     }
 }

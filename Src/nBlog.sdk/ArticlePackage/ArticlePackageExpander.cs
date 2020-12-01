@@ -21,7 +21,7 @@ namespace nBlog.sdk.ArticlePackage
 
             return new ArticlePackageDetails
             {
-                ArticleManifest = new ArticleManifestFile(Path.Combine(folder, ArticlePackageBuilder.ManifestFileName)).Read(),
+                ArticleManifest = new ArticleManifestFile(Path.Combine(folder, ArticleConstants.ManifestFileName)).Read(),
                 BasePath = folder,
                 Files = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories)
                     .Select(x => x[(folder.Length + 1)..])

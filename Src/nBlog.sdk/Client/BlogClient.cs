@@ -13,9 +13,9 @@ namespace nBlog.sdk.Client
     public class BlogClient : IBlogClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<BlogClient> _logger;
 
-        public BlogClient(HttpClient httpClient, ILogger logger)
+        public BlogClient(HttpClient httpClient, ILogger<BlogClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;

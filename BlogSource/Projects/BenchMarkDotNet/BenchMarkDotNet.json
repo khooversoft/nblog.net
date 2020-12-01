@@ -1,0 +1,28 @@
+﻿{
+  "PackageFile": "{articleId}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "articles/benchMarkDotNet",
+    "PackageVersion": "1.0.0.0",
+    "Title": "About Me",
+    "Author": "khoover",
+    "Summary": "A really great performance measurement tool for .Net Core",
+    "ImageFile": "asp-net-core-logo.png",
+
+    "Tags": [
+      ".Net",
+      "performance"
+    ]
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "{specFile}.md"
+    },
+    {
+      "Source": "asp-net-core-logo.png",
+      "Destination": "asp-net-core-logo.png"
+    }
+  ]
+}

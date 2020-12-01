@@ -37,5 +37,11 @@ namespace nBlog.Store.Application
 
             _ => throw new InvalidOperationException(),
         };
+
+        public static string GetOptions(this Option option)
+        {
+            return option.GetConfigValues()
+                .Aggregate(string.Empty, (a, x) => a += option.SecretFilter.FilterSecrets(x) + Environment.NewLine);
+        }
     }
 }

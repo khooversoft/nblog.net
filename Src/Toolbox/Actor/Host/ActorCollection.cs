@@ -16,7 +16,7 @@ namespace Toolbox.Actor.Host
 {
     public class ActorCollection
     {
-        private readonly LruCache<(Type Type, Guid Key), ActorInstance> _actorCache;
+        private readonly LruCache<ActorTypeKey, ActorInstance> _actorCache;
         private readonly ActionBlock<ActorInstance> _actorRemove;
         private readonly object _lock = new object();
         private readonly ILogger<ActorCollection> _logger;
@@ -28,7 +28,7 @@ namespace Toolbox.Actor.Host
 
             _actorRemove = new ActionBlock<ActorInstance>(async x => await x.Instance.Deactivate());
             _logger = logger;
-            _actorCache = new LruCache<(Type, Guid), ActorInstance>(capacity);
+            _actorCache = new LruCache<ActorTypeKey, ActorInstance>(capacity);
             _actorCache.CacheItemRemoved += x => _actorRemove.Post(x.Value);
         }
 
@@ -39,7 +39,7 @@ namespace Toolbox.Actor.Host
         /// <returns></returns>
         public IReadOnlyList<ActorInstance> Clear()
         {
-            _logger.LogTrace("Clearing actor container");
+            _logger.LogTrace($"{nameof(Clear)}: Clearing actor container");
             List<ActorInstance> list;
 
             lock (_lock)
@@ -59,17 +59,19 @@ namespace Toolbox.Actor.Host
         {
             registration.VerifyNotNull(nameof(registration));
 
-            _logger.LogTrace($"Setting actor {registration.ActorKey}");
+            _logger.LogTrace($"{nameof(Set)}: Setting actor {registration.ActorKey}");
             ActorInstance? currentActorRegistration = null;
 
             lock (_lock)
             {
-                if (!_actorCache.TryRemove((registration.ActorType, registration.ActorKey.Key), out currentActorRegistration))
+                if (!_actorCache.TryRemove(new ActorTypeKey(registration.ActorType, registration.ActorKey), out currentActorRegistration))
                 {
+                    _logger.LogTrace($"{nameof(Set)}: No current instance of {registration.ActorKey}");
                     currentActorRegistration = null;
                 }
 
-                _actorCache.Set((registration.ActorType, registration.ActorKey.Key), registration);
+                _actorCache.Set(new ActorTypeKey(registration.ActorType, registration.ActorKey), registration);
+                _logger.LogTrace($"{nameof(Set)}: Adding new registration to cache {registration.ActorKey}, _actorCache.Count={_actorCache.Count}");
             }
 
             // Dispose of the old actor
@@ -92,7 +94,10 @@ namespace Toolbox.Actor.Host
 
             lock (_lock)
             {
-                return _actorCache.TryGetValue((actorType, actorKey.Key), out actorInstance);
+                bool status = _actorCache.TryGetValue(new ActorTypeKey(actorType, actorKey), out actorInstance);
+                _logger.LogTrace($"{nameof(TryGetValue)}: status={status}, actorKey={actorKey}");
+
+                return status;
             }
         }
 
@@ -105,17 +110,32 @@ namespace Toolbox.Actor.Host
         public bool TryRemove(Type actorType, ActorKey actorKey, out ActorInstance actorInstance)
         {
             actorKey.VerifyNotNull(nameof(actorKey));
-            _logger.LogTrace($"Removing actor {actorKey}");
 
             lock (_lock)
             {
-                if (!_actorCache.TryRemove((actorType, actorKey.Key), out actorInstance)) return false;
+                bool status = _actorCache.TryRemove(new ActorTypeKey(actorType, actorKey), out actorInstance);
+                _logger.LogTrace($"{nameof(TryRemove)}: Removing actor {actorKey}, status={status}");
+
+                if (!status) return status;
             }
 
             actorInstance.Instance
                 .Deactivate().GetAwaiter().GetResult();
 
             return true;
+        }
+
+        private record ActorTypeKey
+        {
+            public ActorTypeKey(Type actorType, ActorKey actorKey)
+            {
+                ActorTypeName = actorType.FullName.VerifyNotEmpty(nameof(actorType.FullName));
+                ActorKeyGuid = actorKey.Key;
+            }
+
+            public string ActorTypeName { get; }
+
+            public Guid ActorKeyGuid { get; }
         }
     }
 }

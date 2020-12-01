@@ -15,8 +15,8 @@ namespace nBlogCmd.Application
 
         private static IList<Action<Option>> verifications = new List<Action<Option>>
         {
-            x => x.Build
-                .VerifyAssert(x => x = true, "Command not specified (build)."),
+            x => (x.Build | x.Upload)
+                .VerifyAssert(x => x = true, "Command not specified (build and/or upload)."),
 
             x => x.Environment.ToEnvironment(),
 
@@ -26,6 +26,13 @@ namespace nBlogCmd.Application
 
                 x.SourceFolder.VerifyNotEmpty($"{nameof(x.SourceFolder)} is required for build");
                 x.BuildFolder.VerifyNotEmpty($"{nameof(x.BuildFolder)} is required for build");
+            },
+
+            x =>
+            {
+                if( !x.Upload ) return;
+
+                x.BlogStoreUrl.VerifyNotEmpty($"{nameof(x.BlogStoreUrl)} is required for upload");
             },
         };
 

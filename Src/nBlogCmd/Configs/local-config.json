@@ -1,10 +1,10 @@
 ﻿{
   "SecretId": "nBlogCmd",
   "build": true,
+  "upload": true,
 
-  "SourceFolder": "D:\\Sources\\nBlog.net\\Src\\Test\\nBlogCmd.Test\\TestDocs",
+  "SourceFolder": "D:\\Sources\\nBlog.net\\BlogSource",
   "BuildFolder": "D:\\Work\\nBlogBuild",
 
-  "BlogStoreUrl": "http://localhost:5010"
-
+  "BlogStoreUrl": "http://localhost:5000"
 }

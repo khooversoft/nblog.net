@@ -1,0 +1,28 @@
+﻿{
+  "PackageFile": "{articleId}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "articles/xRun",
+    "PackageVersion": "1.0.0.0",
+    "Title": "About Me",
+    "Author": "khoover",
+    "Summary": "A really great performance measurement tool for .Net Core",
+    "ImageFile": "command_prompt-512.png",
+
+    "Tags": [
+      ".Net",
+      "performance"
+    ]
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "xRun.md"
+    },
+    {
+      "Source": "command_prompt-512.png",
+      "Destination": "command_prompt-512.png"
+    }
+  ]
+}

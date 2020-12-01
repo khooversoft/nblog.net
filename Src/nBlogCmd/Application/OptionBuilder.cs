@@ -29,19 +29,17 @@ namespace nBlogCmd.Application
                 .Select(x => switchNames.Contains(x, StringComparer.OrdinalIgnoreCase) ? x + "=true" : x)
                 .ToArray();
 
-            string? configFile = null;
+            string? environment = null;
             string? secretId = null;
-            //string? accountKey = null;
             Option? option = null;
 
             while (true)
             {
                 option = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .Func(x => GetEnvironmentConfig(option) switch { Stream v => x.AddJsonStream(v), _ => x })
-                        .Func(x => configFile.ToNullIfEmpty() switch { string v => x.AddJsonFile(configFile), _ => x })
+                        .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
                         .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
-                        //.AddCommandLine(args.Concat(accountKey switch { string v => new[] { createAccountKeyCommand(accountKey) }, _ => Enumerable.Empty<string>() }).ToArray())
+                        .AddCommandLine(Args ?? Array.Empty<string>())
                         .Build()
                         .Bind<Option>();
 
@@ -50,8 +48,8 @@ namespace nBlogCmd.Application
                     case Option v when v.Help:
                         return new Option { Help = true };
 
-                    case Option v when v.ConfigFile.ToNullIfEmpty() != null && configFile == null:
-                        configFile = v.ConfigFile;
+                    case Option v when !v.Environment.IsEmpty() && environment == null:
+                        environment = v.Environment;
                         continue;
 
                     case Option v when v.SecretId.ToNullIfEmpty() != null && secretId == null:
@@ -62,20 +60,17 @@ namespace nBlogCmd.Application
                 break;
             }
 
-            option = option with { SecretFilter = new SecretFilter(), RunEnvironment = option.Environment.ToEnvironment() };
-            //option = option with { SecretFilter = new SecretFilter(new[] { option.Store.AccountKey }), RunEnvironment = option.Environment.ToEnvironment() };
+            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
             option.Verify();
 
             return option;
-
-            //static string createAccountKeyCommand(string value) => $"{nameof(option.Store)}:{nameof(option.Store.AccountKey)}=" + value;
         }
 
-        private Stream? GetEnvironmentConfig(Option? option)
+        private Stream? GetEnvironmentConfig(string? environment)
         {
-            if (option?.Environment?.ToNullIfEmpty() == null) return null;
+            if (environment.IsEmpty()) return null;
 
-            string resourceId = option.Environment
+            string resourceId = environment
                 .ToEnvironment()
                 .ToResourceId();
 

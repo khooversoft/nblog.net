@@ -81,6 +81,7 @@ namespace nBlog.Store.Test.Application
             {
                 "Environment=local",
                 "SecretId=nBlogCmd",
+                "Store:ContainerName=test"
             };
 
             return new OptionBuilder()

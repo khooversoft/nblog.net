@@ -19,8 +19,6 @@ namespace nBlog.sdk.ArticlePackage
         private string _specFileBase = null!;
         private string _buildFolder = null!;
 
-        public static string ManifestFileName { get; } = "articlePackage.manifest.json";
-
         public ArticleSpec ArticleSpec { get; private set; } = null!;
 
         public ArticlePackageBuilder SetSpecFile(string specFile)
@@ -53,7 +51,7 @@ namespace nBlog.sdk.ArticlePackage
                 .Append(WriteManifest())
                 .ToArray();
 
-            string zipFilePath = Path.Combine(_buildFolder, ArticleSpec.PackageFile);
+            string zipFilePath = Path.Combine(_buildFolder, ArticleConstants.PackageFolderName, ArticleSpec.PackageFile);
 
             Directory.CreateDirectory(Path.GetDirectoryName(zipFilePath)!);
 
@@ -86,13 +84,15 @@ namespace nBlog.sdk.ArticlePackage
 
         private CopyTo WriteManifest()
         {
-            string filePath = Path.Combine(_specFileBase, ManifestFileName);
+            string filePath = Path.Combine(_buildFolder, ArticleConstants.ObjFolderName, $"{Path.GetFileNameWithoutExtension(_specFile)}_{Guid.NewGuid()}_{ArticleConstants.ManifestFileName}");
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
             ArticleSpec.Manifest.WriteToFile(filePath);
 
             return new CopyTo
             {
                 Source = filePath,
-                Destination = ManifestFileName,
+                Destination = ArticleConstants.ManifestFileName,
             };
         }
     }

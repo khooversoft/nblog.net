@@ -20,7 +20,6 @@ namespace nBlog.sdk.ArticlePackage
 
             subject.PackageVersion.VerifyNotEmpty($"{nameof(subject.PackageVersion)} is required");
             subject.Title.VerifyNotEmpty($"{nameof(subject.Title)} is required");
-            subject.Summary.VerifyNotEmpty($"{nameof(subject.Summary)} is required");
         }
 
         public static void WriteToFile(this ArticleManifest mlPackageManifest, string filePath)

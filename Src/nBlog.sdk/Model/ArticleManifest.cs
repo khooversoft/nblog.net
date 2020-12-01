@@ -20,11 +20,11 @@ namespace nBlog.sdk.Model
 
         public string Title { get; init; } = null!;
 
-        public string Summary { get; init; } = null!;
+        public string? Summary { get; init; }
 
         public string? Author { get; init; }
 
-        public string? ImageName { get; set; }
+        public string? ImageFile { get; set; }
 
         public DateTime Date { get; init; }
 

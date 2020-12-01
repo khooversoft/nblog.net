@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using nBlog.sdk;
 using nBlog.sdk.Store;
+using nBlog.Store.Application;
 using NSwag;
 using System;
 using Toolbox.Azure.DataLake;
@@ -56,8 +58,12 @@ namespace nBlog.Store
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Option option)
         {
+            ILogger<Startup> logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
+
+            logger.LogInformation(option.GetOptions());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

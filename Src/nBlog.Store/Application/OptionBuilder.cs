@@ -37,6 +37,7 @@ namespace nBlog.Store.Application
                 .Select(x => switchNames.Contains(x, StringComparer.OrdinalIgnoreCase) ? x + "=true" : x)
                 .ToArray();
 
+            string? environment = null;
             string? secretId = null;
             Option? option = null;
 
@@ -46,14 +47,18 @@ namespace nBlog.Store.Application
             {
                 option = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .Func(x => GetEnvironmentConfig(option) switch { Stream v => x.AddJsonStream(v), _ => x })
+                    .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
                     .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
-                    .AddCommandLine(args)
+                    .AddCommandLine(args ?? Array.Empty<string>())
                     .Build()
                     .Bind<Option>();
 
                 switch (option)
                 {
+                    case Option v when !v.Environment.IsEmpty() && environment == null:
+                        environment = v.Environment;
+                        continue;
+
                     case Option v when !v.SecretId.IsEmpty() && secretId == null:
                         secretId = v.SecretId;
                         continue;
@@ -68,11 +73,11 @@ namespace nBlog.Store.Application
             return option;
         }
 
-        private Stream? GetEnvironmentConfig(Option? option)
+        private Stream? GetEnvironmentConfig(string? environment)
         {
-            if (option?.Environment?.ToNullIfEmpty() == null) return null;
+            if (environment.IsEmpty()) return null;
 
-            string resourceId = option.Environment
+            string resourceId = environment
                 .ToEnvironment()
                 .ToResourceId();
 

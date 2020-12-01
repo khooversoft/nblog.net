@@ -69,11 +69,14 @@ namespace Toolbox.Actor.Host
             {
                 if (_actorCollection.TryGetValue(actoryType, actorKey, out ActorInstance actorInstance))
                 {
+                    _logger.LogInformation($"{nameof(GetActor)}: found instance, actorKey={actorKey}, actorInstance.ActorKey={actorInstance.ActorKey}");
                     return (T)actorInstance.GetInstance<T>();
                 }
 
                 // Create actor object
                 IActorBase actorBase = _registry.Create<T>(actorKey, this);
+                (actorKey == actorBase.ActorKey).VerifyAssert(x => x, $"{nameof(GetActor)}: CREATED-Error  Actor key !=, actorKey={actorKey}, actorBase.ActorKey={actorBase.ActorKey}");
+                _logger.LogTrace($"{nameof(GetActor)}: CREATED actorBase.ActorKey={actorBase.ActorKey}");
 
                 // Create proxy
                 T actorInterface = ActorProxy<T>.Create(actorBase, this);

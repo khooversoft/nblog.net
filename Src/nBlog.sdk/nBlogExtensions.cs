@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using nBlog.sdk.Actors;
-using nBlog.sdk.Services;
 using nBlog.sdk.Store;
 using Toolbox.Actor.Host;
 using Toolbox.Tools;
@@ -31,7 +30,7 @@ namespace nBlog.sdk
         {
             services.VerifyNotNull(nameof(services));
 
-            services.AddSingleton<IArticlePackageActor, ArticlePackageActor>();
+            services.AddTransient<IArticlePackageActor, ArticlePackageActor>();
             services.AddSingleton<IArticleStoreService, ArticleStoreService>();
             services.AddSingleton<IArticleStore, ArticleStore>();
 

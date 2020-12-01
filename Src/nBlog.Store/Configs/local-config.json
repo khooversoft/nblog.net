@@ -1,6 +1,8 @@
 ﻿{
+  "SecretId": "nBlogCmd",
+
   "Store": {
     "AccountName": "devnblogstorage",
-    "ContainerName": "test"
+    "ContainerName": "master"
   }
 }

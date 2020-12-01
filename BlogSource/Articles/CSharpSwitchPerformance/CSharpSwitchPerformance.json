@@ -1,0 +1,30 @@
+﻿{
+  "PackageFile": "{articleId}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "articles/csharpSwitchPerformance",
+    "PackageVersion": "1.0.0.0",
+    "Title": "C# Switch Performance",
+    "Author": "khoover",
+    "Summary": "One of the new features in C# 8.0 is the switch expression. I have been using most of the new features but I like this one the best. This new C# feature was taken from F# or functional programming.",    
+    "ImageFile": "csharp-icon.png",
+
+    "Tags": [
+      "C#",
+      "switch",
+      "performance",
+      ".Net"
+    ]
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "csharpSwitchPerformance.md"
+    },
+    {
+      "Source": "csharp-icon.png",
+      "Destination": "csharp-icon.png"
+    }
+  ]
+}

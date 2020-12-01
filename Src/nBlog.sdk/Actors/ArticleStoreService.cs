@@ -1,33 +1,36 @@
-﻿using nBlog.sdk.Actors;
+﻿using Microsoft.Extensions.Logging;
 using nBlog.sdk.Model;
 using nBlog.sdk.Store;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Actor;
 using Toolbox.Actor.Host;
-using Toolbox.Azure.DataLake;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.Services
+namespace nBlog.sdk.Actors
 {
     public class ArticleStoreService : IArticleStoreService
     {
         public IActorHost? _actorHost;
         private readonly IArticleStore _articleStore;
+        private readonly ILogger<ArticleStoreService> _logger;
 
-        public ArticleStoreService(IActorHost actorHost, IArticleStore articleStore)
+        public ArticleStoreService(IActorHost actorHost, IArticleStore articleStore, ILogger<ArticleStoreService> logger)
         {
             _actorHost = actorHost;
             _articleStore = articleStore;
+            _logger = logger;
         }
 
         public async Task<ArticlePayload?> Get(ArticleId id, CancellationToken token = default)
         {
             id.VerifyNotNull(nameof(id));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey((string)id));
+            var actorKey = new ActorKey((string)id);
+            _logger.LogTrace($"{nameof(Get)}: actorKey={actorKey}, id={id.Id}");
+
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(actorKey);
             return await actor.Get(token);
         }
 
@@ -35,7 +38,10 @@ namespace nBlog.sdk.Services
         {
             record.VerifyNotNull(nameof(record));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey(record.Id));
+            var actorKey = new ActorKey(new ArticleId(record.Id).ToString());
+            _logger.LogTrace($"{nameof(Set)}: actorKey={actorKey}, id={record.Id}");
+
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(actorKey);
             await actor.Set(record, token);
         }
 
@@ -43,7 +49,10 @@ namespace nBlog.sdk.Services
         {
             id.VerifyNotNull(nameof(id));
 
-            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(new ActorKey((string)id));
+            var actorKey = new ActorKey((string)id);
+            _logger.LogTrace($"{nameof(Delete)}: actorKey={actorKey}, id={id.Id}");
+
+            IArticlePackageActor actor = _actorHost!.GetActor<IArticlePackageActor>(actorKey);
             return await actor.Delete(token);
         }
 

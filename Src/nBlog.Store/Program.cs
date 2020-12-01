@@ -38,6 +38,7 @@ namespace nBlog.Store
                 {
                     config.AddConsole();
                     config.AddDebug();
+                    config.AddFilter(x => true);
 
                     config.AddProvider(new TargetBlockLoggerProvider(telemetryBuffer.TargetBlock));
                 })

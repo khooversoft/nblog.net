@@ -42,15 +42,37 @@ namespace Toolbox.Test.Actor
                     ICache cache = actorHost.GetActor<ICache>(key);
                     cache.GetActorKey().Should().Be(key);
                     cache.GetActorHost().Should().Be(actorHost);
+                    cache.Test(key);
 
-                    ActorKey key2 = new ActorKey($"cache/test/{x}");
+                    ActorKey key2 = new ActorKey($"cache/test/{max-x}");
                     ICache2 cache2 = actorHost.GetActor<ICache2>(key2);
                     cache2.GetActorKey().Should().Be(key2);
                     cache2.GetActorHost().Should().Be(actorHost);
+                    cache2.Test(key2);
                 });
 
             count.Should().Be(max);
             count2.Should().Be(max);
+
+            Enumerable.Range(0, max)
+                .ForEach(x =>
+                {
+                    ActorKey key = new ActorKey($"cache/test/{x}");
+                    ICache cache = actorHost.GetActor<ICache>(key);
+                    cache.GetActorKey().Should().Be(key);
+                    cache.GetActorKey().Key.Should().Be(key.Key);
+                    cache.GetActorKey().Value.Should().Be(key.Value);
+                    cache.GetActorHost().Should().Be(actorHost);
+                    cache.Test(key);
+
+                    ActorKey key2 = new ActorKey($"cache/test/{max-x}");
+                    ICache2 cache2 = actorHost.GetActor<ICache2>(key2);
+                    cache2.GetActorKey().Should().Be(key2);
+                    cache2.GetActorKey().Key.Should().Be(key2.Key);
+                    cache2.GetActorKey().Value.Should().Be(key2.Value);
+                    cache2.GetActorHost().Should().Be(actorHost);
+                    cache2.Test(key2);
+                });
 
             await Enumerable.Range(0, max)
                 .Select(async x =>
@@ -58,7 +80,7 @@ namespace Toolbox.Test.Actor
                     ActorKey key = new ActorKey($"cache/test/{x}");
                     (await actorHost.Deactivate<ICache>(key)).Should().BeTrue();
 
-                    ActorKey key2 = new ActorKey($"cache/test/{x}");
+                    ActorKey key2 = new ActorKey($"cache/test/{max-x}");
                     (await actorHost.Deactivate<ICache2>(key2)).Should().BeTrue();
                 })
                 .WhenAll();
@@ -191,6 +213,7 @@ namespace Toolbox.Test.Actor
         {
             Task<bool> IsCached(string key);
             Task Add(string key);
+            Task Test(ActorKey key);
             ActorKey GetActorKey();
             IActorHost GetActorHost();
         }
@@ -224,12 +247,19 @@ namespace Toolbox.Test.Actor
                 _values.Add(key);
                 return Task.FromResult(0);
             }
+
+            public Task Test(ActorKey key)
+            {
+                base.ActorKey.Should().Be(key, this.GetType().Name);
+                return Task.CompletedTask;
+            }
         }
 
         private interface ICache2 : IActor
         {
             Task<bool> IsCached(string key);
             Task Add(string key);
+            Task Test(ActorKey key);
             ActorKey GetActorKey();
             IActorHost GetActorHost();
         }
@@ -262,6 +292,12 @@ namespace Toolbox.Test.Actor
             {
                 _values.Add(key);
                 return Task.FromResult(0);
+            }
+
+            public Task Test(ActorKey key)
+            {
+                base.ActorKey.Should().Be(key, this.GetType().Name);
+                return Task.CompletedTask;
             }
         }
     }

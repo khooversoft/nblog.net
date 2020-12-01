@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace nBlog.sdk.Services
+namespace nBlog.sdk.Actors
 {
     public interface IArticleStoreService
     {

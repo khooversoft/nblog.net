@@ -81,6 +81,7 @@ namespace nBlogCmd
                 var executeQueue = new ActionBlock<Func<Task>>(async x => await x());
 
                 if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildActivity>().Build(cancellationTokenSource.Token));
+                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<UploadActivity>().Upload(cancellationTokenSource.Token));
 
                 executeQueue.Complete();
                 await executeQueue.Completion;
@@ -104,6 +105,7 @@ namespace nBlogCmd
 
             service.AddSingleton(option);
             service.AddSingleton<BuildActivity>();
+            service.AddSingleton<UploadActivity>();
 
             service.AddHttpClient<IBlogClient, BlogClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
 

@@ -92,8 +92,8 @@ namespace nBlog.sdk.ArticlePackage
             using Stream payloadStream = new MemoryStream(payload);
             using var zipArchive = new ZipArchive(payloadStream, ZipArchiveMode.Read, false);
 
-            ZipArchiveEntry? entry = zipArchive.GetEntry(ArticlePackageBuilder.ManifestFileName)
-                .VerifyNotNull($"Could not find {ArticlePackageBuilder.ManifestFileName} manifest in article payload");
+            ZipArchiveEntry? entry = zipArchive.GetEntry(ArticleConstants.ManifestFileName)
+                .VerifyNotNull($"Could not find {ArticleConstants.ManifestFileName} manifest in article payload");
 
             using Stream fileStream = entry.Open();
             using StreamReader memoryReader = new StreamReader(fileStream);

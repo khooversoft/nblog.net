@@ -1,16 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using nBlog.sdk.ArticlePackage;
 using nBlog.sdk.Model;
-using nBlog.sdk.Services;
 using nBlog.sdk.Store;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Actor;
-using Toolbox.Azure.DataLake;
 using Toolbox.Tools;
 
 namespace nBlog.sdk.Actors
@@ -31,6 +25,7 @@ namespace nBlog.sdk.Actors
         {
             if (_cache.TryGetValue(out ArticlePayload? value)) return value;
 
+            _logger.LogTrace($"{nameof(Get)}: actorKey={base.ActorKey}");
             ArticlePayload? articlePayload = await _acticleStore.Get((ArticleId)base.ActorKey.Value, token: token);
 
             if (articlePayload == null) return null;
@@ -42,7 +37,7 @@ namespace nBlog.sdk.Actors
         public async Task Set(ArticlePayload articlePayload, CancellationToken token)
         {
             articlePayload.VerifyNotNull(nameof(articlePayload))
-                .VerifyAssert(x => articlePayload.Id.ToLower() == base.ActorKey.Value, $"Id mismatch - id={articlePayload.Id.ToLower()}, actorKey={ base.ActorKey.Value}");
+                .VerifyAssert(x => articlePayload.Id.ToLower() == base.ActorKey.Value, $"Id mismatch - id={articlePayload.Id.ToLower()}, actorKey={base.ActorKey}");
 
             _logger.LogTrace($"{nameof(Set)}: Writing {articlePayload.Id}");
             await _acticleStore.Set(articlePayload, token);
@@ -54,6 +49,7 @@ namespace nBlog.sdk.Actors
         {
             _cache.Clear();
 
+            _logger.LogTrace($"{nameof(Delete)}: actorKey={base.ActorKey}");
             bool state = await _acticleStore.Delete((ArticleId)base.ActorKey.Value, token: token);
 
             await Deactivate();

@@ -30,8 +30,4 @@
     <ProjectReference Include="..\Toolbox\Toolbox.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

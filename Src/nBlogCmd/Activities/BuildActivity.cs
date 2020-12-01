@@ -57,6 +57,8 @@ namespace nBlogCmd.Activities
 
         private void BuildPackage(string specFilePath, CancellationToken token)
         {
+            _logger.LogInformation($"Building {specFilePath}");
+
             new ArticlePackageBuilder()
                 .SetSpecFile(specFilePath)
                 .SetBuildFolder(_option.BuildFolder!)
