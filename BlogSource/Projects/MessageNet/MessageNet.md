@@ -1,6 +1,6 @@
 ﻿# Message Net
 
-Imagen a self configuring network that provides reliable messages, in order, that can support both greedy and broadcast
+Image a self configuring network that provides reliable messages, in order, that can support both greedy and broadcast
 capabilities.  A reasonable queue system right?
 
 The goal of this project is to make node to node(s) communication as simple as sending a message,

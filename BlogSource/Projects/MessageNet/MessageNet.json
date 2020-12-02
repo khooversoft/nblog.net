@@ -4,9 +4,9 @@
   "Manifest": {
     "ArticleId": "articles/message-net",
     "PackageVersion": "1.0.0.0",
-    "Title": "About Me",
+    "Title": "Message Net",
     "Author": "khoover",
-    "Summary": "A really great performance measurement tool for .Net Core",
+    "Summary": "Self configuring network that provides reliable messages, in order, that can support both greedy and broadcast capabilities.",
     "ImageFile": "network.png",
     "Date": "2020-05-01T00:00:00",
 
@@ -19,7 +19,7 @@
   "Copy": [
     {
       "Source": "{specFile}.md",
-      "Destination": "benchMarkDotNet.md"
+      "Destination": "message-net.md"
     },
     {
       "Source": "network.png",

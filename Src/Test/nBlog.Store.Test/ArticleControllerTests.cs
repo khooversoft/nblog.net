@@ -63,16 +63,29 @@ namespace nBlog.Store.Test
 
             byte[] packageBytes = File.ReadAllBytes(packageFile);
             ArticlePayload articlePayload = packageBytes.ToArticlePayload();
+            ArticleManifest articleManifest = packageBytes.ReadManifest();
 
             await host.ArticleClient.Set(articlePayload);
 
             ArticlePayload? readPayload = await host.ArticleClient.Get((ArticleId)articlePayload.Id);
             readPayload.Should().NotBeNull();
 
+            ArticleManifest readArticleManifest = articlePayload.ReadManifest();
+            articleManifest.ArticleId.Should().Be(readArticleManifest.ArticleId);
+            articleManifest.PackageVersion.Should().Be(readArticleManifest.PackageVersion);
+            articleManifest.Title.Should().Be(readArticleManifest.Title);
+            articleManifest.Summary.Should().Be(readArticleManifest.Summary);
+            articleManifest.Author.Should().Be(readArticleManifest.Author);
+            articleManifest.ImageFile.Should().Be(readArticleManifest.ImageFile);
+            articleManifest.Date.Should().Be(readArticleManifest.Date);
+            Enumerable.SequenceEqual(articleManifest.Tags!, readArticleManifest.Tags!).Should().BeTrue();
+
             (articlePayload == readPayload).Should().BeTrue();
 
             BatchSet<string> searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
+
+
             searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeTrue();
 
             (await host.ArticleClient.Delete((ArticleId)articlePayload.Id)).Should().BeTrue();

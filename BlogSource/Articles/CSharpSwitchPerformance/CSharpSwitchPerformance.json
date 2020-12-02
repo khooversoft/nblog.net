@@ -21,7 +21,7 @@
   "Copy": [
     {
       "Source": "{specFile}.md",
-      "Destination": "csharpSwitchPerformance.md"
+      "Destination": "csharp-switch-performance.md"
     },
     {
       "Source": "csharp-icon.png",

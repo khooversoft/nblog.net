@@ -1,16 +1,27 @@
-﻿<div class="row col-md-12 rounded border mb-md-2">
+﻿@using NBlog.Server.Services;
+
+
+<div class="row col-md-12 rounded border mb-md-2">
     <div class="row col-md-12 mt-md-3 mb-md-3">
         <span class="font-weight-bold">Topics</span>
     </div>
     <div class="row col-md-12">
-        <NavLink href="" class="btn border topic-btn">.Net Core</NavLink>
-        <NavLink href="" class="btn border topic-btn">Micro Services</NavLink>
-        <NavLink href="" class="btn border topic-btn">Azure Service Bus</NavLink>
-        <NavLink href="" class="btn border topic-btn">Azure Cosmos DB</NavLink>
-        <NavLink href="" class="btn border topic-btn">Azure Data Lake Storage</NavLink>
+        @foreach (var item in Tags)
+        {
+            <NavLink href="" class="btn border topic-btn">@item</NavLink>
+        }
     </div>
 </div>
 
 @code {
+    [Inject]
+    public DirectoryService DirectoryService { get; set; } = null!;
+
+    private IReadOnlyList<string> Tags { get; set; } = Array.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tags = await DirectoryService.GetTags();
+    }
 
 }

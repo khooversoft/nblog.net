@@ -1,13 +1,8 @@
 ﻿using nBlog.sdk.Model;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Toolbox.Extensions;
 using Toolbox.Tools;
 
 namespace nBlog.sdk.ArticlePackage.Extensions
@@ -84,24 +79,24 @@ namespace nBlog.sdk.ArticlePackage.Extensions
             return payload;
         }
 
-
         public static ArticleManifest ReadManifest(this ArticlePayload subject) => subject.ToBytes().ReadManifest();
 
-        public static ArticleManifest ReadManifest(this byte[] payload)
+        public static byte[] GetPackageItem(this ArticlePayload subject, string path) => subject.ToBytes().GetPackageItem(path);
+
+        public static byte[] GetPackageItem(this byte[] payload, string path)
         {
             using Stream payloadStream = new MemoryStream(payload);
             using var zipArchive = new ZipArchive(payloadStream, ZipArchiveMode.Read, false);
 
-            ZipArchiveEntry? entry = zipArchive.GetEntry(ArticleConstants.ManifestFileName)
-                .VerifyNotNull($"Could not find {ArticleConstants.ManifestFileName} manifest in article payload");
+            ZipArchiveEntry? entry = zipArchive.GetEntry(path)
+                .VerifyNotNull($"Could not find {path} manifest in article payload");
 
             using Stream fileStream = entry.Open();
-            using StreamReader memoryReader = new StreamReader(fileStream);
 
-            string json = memoryReader.ReadToEnd();
+            using MemoryStream memoryReader = new MemoryStream();
+            fileStream.CopyTo(memoryReader);
 
-            return Json.Default.Deserialize<ArticleManifest>(json)
-                .VerifyNotNull("Cannot deserialize from package");
+            return memoryReader.ToArray();
         }
     }
 }

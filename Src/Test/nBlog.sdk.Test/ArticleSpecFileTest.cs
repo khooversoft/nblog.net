@@ -21,6 +21,8 @@ namespace nBlog.sdk.Test
             articleSpec.Manifest.ArticleId.Should().Be("articles/contact");
             articleSpec.Manifest.Title.Should().Be("Contact");
             articleSpec.Manifest.Author.Should().Be("Ghost Writer");
+            articleSpec.Manifest.Summary.Should().Be("Summary text");
+            articleSpec.Manifest.ImageFile.Should().Be("ImageFile text");
             articleSpec.Manifest.Date.Should().Be(new DateTime(2020, 1, 2));
 
             Enumerable.SequenceEqual(articleSpec.Manifest.Tags, new[] { "Tag1", "Tag2" }).Should().BeTrue();

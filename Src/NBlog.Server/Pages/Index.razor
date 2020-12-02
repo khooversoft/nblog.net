@@ -1,13 +1,15 @@
 ﻿@page "/"
 
 @using nBlog.sdk.Model;
+@using NBlog.Server.Services;
+@using NBlog.Server.Model;
 
 <div class="row mt-md-5">
     <div class="col-md-8">
         <div class="row">
             @foreach (var item in Articles)
             {
-                <ArticleCard Manifest="@item" />
+                <ArticleCard ArticleCache="@item" />
             }
         </div>
     </div>
@@ -21,32 +23,57 @@
 
 
 @code {
-    private IReadOnlyList<ArticleManifest> Articles { get; set; }
+    private const int _maxPage = 10;
 
-    protected override void OnInitialized()
+    [Inject]
+    public DirectoryService DirectoryService { get; set; } = null!;
+
+    [Inject]
+    public ArticleService ArticleService { get; set; } = null!;
+
+    private IReadOnlyList<ArticleCache> Articles { get; set; } = Array.Empty<ArticleCache>();
+
+    protected override async Task OnInitializedAsync()
     {
-        Articles = new List<ArticleManifest>
-{
-            new ArticleManifest
-            {
-                ArticleId = "performance/switch",
-                Title = "Performance of switch",
-                Date = new DateTime(2019, 10, 1),
-                Summary = "There are a lot of ways to make decisions based on state, C# new switch pattern matching is based on a functional technique can handle standard input and output processing.  But is it fast?",
-                ImageFile = "/Images/youll-build-a-fun-animal-matching-gameand-get-or.png",
-                Tags = new [] { ".Net Core", "Performance" },
-            },
-            new ArticleManifest
-            {
-                ArticleId = "performance/refactoring",
-                Title = "Why refactoring is not the answer, or big refactoring should only happen in major releases.",
-                Date = new DateTime(2020, 3, 5),
-                Summary = "There is positive and negative aspecs of refactoring.  Normally refactoring is requiring when doing major releases given new capabilities.  Refactoring has a large testing cost and usually points to high coupled code.",
-                ImageFile = "/Images/ApplyAll-1024x581.png",
-                Tags = new [] { ".Net Core", "Composition vs Inheritance" },
-            },
-        };
+        IReadOnlyList<ArticleManifest> manifests = await DirectoryService.ByDate(0, _maxPage);
 
-        base.OnInitialized();
+        var list = new List<ArticleCache>();
+        foreach(var item in manifests)
+        {
+            ArticleCache? articleCache = await ArticleService.Get(new ArticleId(item.ArticleId));
+            if (articleCache == null) continue;
+
+            list.Add(articleCache);
+        }
+
+        Articles = list;
     }
+
+
+    //    protected override void OnInitialized()
+    //    {
+    //        Articles = new List<ArticleManifest>
+    //{
+    //            new ArticleManifest
+    //            {
+    //                ArticleId = "performance/switch",
+    //                Title = "Performance of switch",
+    //                Date = new DateTime(2019, 10, 1),
+    //                Summary = "There are a lot of ways to make decisions based on state, C# new switch pattern matching is based on a functional technique can handle standard input and output processing.  But is it fast?",
+    //                ImageFile = "/Images/youll-build-a-fun-animal-matching-gameand-get-or.png",
+    //                Tags = new [] { ".Net Core", "Performance" },
+    //            },
+    //            new ArticleManifest
+    //            {
+    //                ArticleId = "performance/refactoring",
+    //                Title = "Why refactoring is not the answer, or big refactoring should only happen in major releases.",
+    //                Date = new DateTime(2020, 3, 5),
+    //                Summary = "There is positive and negative aspecs of refactoring.  Normally refactoring is requiring when doing major releases given new capabilities.  Refactoring has a large testing cost and usually points to high coupled code.",
+    //                ImageFile = "/Images/ApplyAll-1024x581.png",
+    //                Tags = new [] { ".Net Core", "Composition vs Inheritance" },
+    //            },
+    //        };
+
+    //        base.OnInitialized();
+    //    }
 }

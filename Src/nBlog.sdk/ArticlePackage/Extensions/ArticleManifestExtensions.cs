@@ -1,10 +1,6 @@
 ﻿using nBlog.sdk.Model;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO.Compression;
 using Toolbox.Tools;
 
 namespace nBlog.sdk.ArticlePackage.Extensions
@@ -29,6 +25,23 @@ namespace nBlog.sdk.ArticlePackage.Extensions
             mlPackageManifest.Verify();
             var json = Json.Default.SerializeFormat(mlPackageManifest);
             File.WriteAllText(filePath, json);
+        }
+
+        public static ArticleManifest ReadManifest(this byte[] payload)
+        {
+            using Stream payloadStream = new MemoryStream(payload);
+            using var zipArchive = new ZipArchive(payloadStream, ZipArchiveMode.Read, false);
+
+            ZipArchiveEntry? entry = zipArchive.GetEntry(ArticleConstants.ManifestFileName)
+                .VerifyNotNull($"Could not find {ArticleConstants.ManifestFileName} manifest in article payload");
+
+            using Stream fileStream = entry.Open();
+            using StreamReader memoryReader = new StreamReader(fileStream);
+
+            string json = memoryReader.ReadToEnd();
+
+            return Json.Default.Deserialize<ArticleManifest>(json)
+                .VerifyNotNull("Cannot deserialize from package");
         }
     }
 }

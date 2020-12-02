@@ -2,9 +2,9 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/x-run",
+    "ArticleId": "project/x-run",
     "PackageVersion": "1.0.0.0",
-    "Title": "About Me",
+    "Title": "Powerful parallel workflow extensions to PowerShell",
     "Author": "khoover",
     "Summary": "A really great performance measurement tool for .Net Core",
     "ImageFile": "command_prompt-512.png",
@@ -19,7 +19,7 @@
   "Copy": [
     {
       "Source": "{specFile}.md",
-      "Destination": "xRun.md"
+      "Destination": "x-run.md"
     },
     {
       "Source": "command_prompt-512.png",

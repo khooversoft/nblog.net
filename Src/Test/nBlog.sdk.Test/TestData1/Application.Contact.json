@@ -5,7 +5,9 @@
     "ArticleId": "articles/contact",
     "Title": "Contact",
     "Author": "Ghost Writer",
+    "Summary": "Summary text",
     "Date": "2020-01-02T00:00:00",
+    "ImageFile": "ImageFile text",
     "Tags": [
       "Tag1",
       "Tag2"
