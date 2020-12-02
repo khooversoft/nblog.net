@@ -1,24 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
+using nBlog.sdk.ArticlePackage;
 using nBlogCmd.Application;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Toolbox.Tools;
-using nBlog.sdk.ArticlePackage;
-using System.Threading;
-using Toolbox.Services;
-using Toolbox.Extensions;
 
 namespace nBlogCmd.Activities
 {
     internal class BuildActivity
     {
-        private readonly Option _option;
         private readonly ILogger<BuildActivity> _logger;
+        private readonly Option _option;
 
         public BuildActivity(Option option, ILogger<BuildActivity> logger)
         {
@@ -32,11 +26,22 @@ namespace nBlogCmd.Activities
             await RunBuild(token);
         }
 
+        private void BuildPackage(string specFilePath, CancellationToken token)
+        {
+            _logger.LogInformation($"Building {specFilePath}");
+
+            new ArticlePackageBuilder()
+                .SetSpecFile(specFilePath)
+                .SetBuildFolder(_option.BuildFolder!)
+                .Build(x => _logger.LogInformation($"Build: {specFilePath}, Count={x.Count}, Total={x.Total}"), token);
+        }
+
         private void ClearBuildFolder()
         {
             _option.BuildFolder.VerifyNotEmpty($"{nameof(_option.BuildFolder)} not specified");
 
             if (Directory.Exists(_option.BuildFolder)) Directory.Delete(_option.BuildFolder, true);
+
             Directory.CreateDirectory(_option.BuildFolder);
         }
 
@@ -53,16 +58,6 @@ namespace nBlogCmd.Activities
 
             activities.Complete();
             await activities.Completion;
-        }
-
-        private void BuildPackage(string specFilePath, CancellationToken token)
-        {
-            _logger.LogInformation($"Building {specFilePath}");
-
-            new ArticlePackageBuilder()
-                .SetSpecFile(specFilePath)
-                .SetBuildFolder(_option.BuildFolder!)
-                .Build(x => _logger.LogInformation($"Build: {specFilePath}, Count={x.Count}, Total={x.Total}"), token);
         }
     }
 }

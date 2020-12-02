@@ -2,12 +2,13 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/xRun",
+    "ArticleId": "articles/x-run",
     "PackageVersion": "1.0.0.0",
     "Title": "About Me",
     "Author": "khoover",
     "Summary": "A really great performance measurement tool for .Net Core",
     "ImageFile": "command_prompt-512.png",
+    "Date": "2019-06-02T00:00:00",
 
     "Tags": [
       ".Net",

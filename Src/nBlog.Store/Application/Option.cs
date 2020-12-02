@@ -17,5 +17,7 @@ namespace nBlog.Store.Application
         public string? SecretId { get; init; }
 
         public DataLakeStoreOption Store { get; init; } = null!;
+
+        public string? ApplicationUrl { get; init; }
     }
 }

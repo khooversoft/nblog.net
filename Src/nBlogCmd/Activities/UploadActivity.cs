@@ -1,13 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Client;
 using nBlog.sdk.Model;
 using nBlogCmd.Application;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -16,11 +12,11 @@ namespace nBlogCmd.Activities
 {
     internal class UploadActivity
     {
-        private readonly Option _option;
-        private readonly IBlogClient _blogClient;
+        private readonly IArticleClient _blogClient;
         private readonly ILogger<BuildActivity> _logger;
+        private readonly Option _option;
 
-        public UploadActivity(Option option, IBlogClient blogClient, ILogger<BuildActivity> logger)
+        public UploadActivity(Option option, IArticleClient blogClient, ILogger<BuildActivity> logger)
         {
             _option = option;
             _blogClient = blogClient;

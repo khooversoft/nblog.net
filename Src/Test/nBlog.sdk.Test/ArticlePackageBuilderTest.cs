@@ -1,5 +1,6 @@
 using FluentAssertions;
 using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Model;
 using nBlog.sdk.Test.Application;
 using System;

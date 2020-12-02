@@ -2,12 +2,13 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/benchMarkDotNet",
+    "ArticleId": "articles/message-net",
     "PackageVersion": "1.0.0.0",
     "Title": "About Me",
     "Author": "khoover",
     "Summary": "A really great performance measurement tool for .Net Core",
     "ImageFile": "network.png",
+    "Date": "2020-05-01T00:00:00",
 
     "Tags": [
       ".Net",

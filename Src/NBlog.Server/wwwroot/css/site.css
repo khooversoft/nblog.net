@@ -201,6 +201,51 @@ app {
     margin: 2px;
 }
 
-.topic-btn:hover {
-    background-color: lightgray;
+    .topic-btn:hover {
+        background-color: lightgray;
+    }
+
+.topic-btn-small {
+    padding: .1rem .25rem;
+    margin: 1px;
+    font-size: .8rem;
+}
+
+    .topic-btn-small:hover {
+        background-color: lightgray;
+    }
+
+.btn-blog {
+    color: #232323;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.btn-blog:hover {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+/*.parent:hover > div {
+    opacity: 0.5;
+}
+
+    .parent:hover > div:hover {
+        opacity: 1.0;
+    }*/
+
+.card-footer-divider {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    margin-top: .1rem;
+    margin-bottom: .1rem;
+}
+
+.program-footer {
+    background-color: #f6f6f6;
+    height: 60px;
+    border-top: 1px solid #e7e7e7;
+    padding: 18px 0;
+    color: #232323;
+    font-size: .9rem;
+    border-radius: 10px;
 }

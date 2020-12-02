@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Model;
 using nBlog.Store.Test.Application;
 using System;
@@ -26,9 +27,9 @@ namespace nBlog.Store.Test
 
             ArticlePayload articlePayload = bytes.ToArticlePayload(id);
 
-            await host.BlogClient.Set(articlePayload);
+            await host.ArticleClient.Set(articlePayload);
 
-            ArticlePayload? readPayload = await host.BlogClient.Get((ArticleId)id);
+            ArticlePayload? readPayload = await host.ArticleClient.Get((ArticleId)id);
             readPayload.Should().NotBeNull();
 
             (articlePayload == readPayload).Should().BeTrue();
@@ -36,13 +37,13 @@ namespace nBlog.Store.Test
             string payloadText = Encoding.UTF8.GetString(readPayload!.ToBytes());
             payloadText.Should().Be(payload);
 
-            BatchSet<string> searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
+            BatchSet<string> searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
             searchList.Records.Any(x => x.StartsWith(id)).Should().BeTrue();
 
-            (await host.BlogClient.Delete((ArticleId)id)).Should().BeTrue();
+            (await host.ArticleClient.Delete((ArticleId)id)).Should().BeTrue();
 
-            searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
+            searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
             searchList.Records.Any(x => x.StartsWith(id)).Should().BeFalse();
         }
@@ -63,20 +64,20 @@ namespace nBlog.Store.Test
             byte[] packageBytes = File.ReadAllBytes(packageFile);
             ArticlePayload articlePayload = packageBytes.ToArticlePayload();
 
-            await host.BlogClient.Set(articlePayload);
+            await host.ArticleClient.Set(articlePayload);
 
-            ArticlePayload? readPayload = await host.BlogClient.Get((ArticleId)articlePayload.Id);
+            ArticlePayload? readPayload = await host.ArticleClient.Get((ArticleId)articlePayload.Id);
             readPayload.Should().NotBeNull();
 
             (articlePayload == readPayload).Should().BeTrue();
 
-            BatchSet<string> searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
+            BatchSet<string> searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
             searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeTrue();
 
-            (await host.BlogClient.Delete((ArticleId)articlePayload.Id)).Should().BeTrue();
+            (await host.ArticleClient.Delete((ArticleId)articlePayload.Id)).Should().BeTrue();
 
-            searchList = await host.BlogClient.List(QueryParameters.Default).ReadNext();
+            searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
             searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeFalse();
         }

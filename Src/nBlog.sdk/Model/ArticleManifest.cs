@@ -26,7 +26,7 @@ namespace nBlog.sdk.Model
 
         public string? ImageFile { get; set; }
 
-        public DateTime Date { get; init; }
+        public DateTime Date { get; init; } = DateTime.Now;
 
         public IList<string>? Tags { get; init; }
     }

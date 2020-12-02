@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Model;
 using System;
 using System.Collections.Generic;

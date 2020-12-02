@@ -1,4 +1,5 @@
-﻿using nBlog.sdk.Model;
+﻿using nBlog.sdk.ArticlePackage.Extensions;
+using nBlog.sdk.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;

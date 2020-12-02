@@ -5,15 +5,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using nBlog.sdk.Client;
 using nBlog.Store.Application;
-using nBlog.Store.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Toolbox.Model;
 
 namespace nBlog.Store.Test.Application
 {
@@ -29,7 +23,9 @@ namespace nBlog.Store.Test.Application
 
         public T Resolve<T>() where T : class => _host?.Services.GetService<T>() ?? throw new InvalidOperationException($"Cannot find service {typeof(T).Name}");
 
-        public BlogClient BlogClient => new BlogClient(Client, Resolve<ILoggerFactory>().CreateLogger<BlogClient>());
+        public IArticleClient ArticleClient => new ArticleClient(Client, Resolve<ILoggerFactory>().CreateLogger<ArticleClient>());
+
+        public IDirectoryClient DirectoryClient => new DirectoryClient(Client, Resolve<ILoggerFactory>().CreateLogger<DirectoryClient>());
 
         public TestWebsiteHost StartApiServer()
         {

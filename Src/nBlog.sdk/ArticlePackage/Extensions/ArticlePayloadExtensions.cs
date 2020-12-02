@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.ArticlePackage
+namespace nBlog.sdk.ArticlePackage.Extensions
 {
-    public static class ArticleExtensions
+    public static class ArticlePayloadExtensions
     {
         public static void Verify(this ArticleSpec subject)
         {
@@ -64,8 +64,8 @@ namespace nBlog.sdk.ArticlePackage
         {
             subject.VerifyAssert(x => x?.Length > 0, $"{nameof(subject)} is empty");
 
-            ArticleManifest articleManifest = ReadManifest(subject);
-            return ToArticlePayload(subject, articleManifest.ArticleId);
+            ArticleManifest articleManifest = subject.ReadManifest();
+            return subject.ToArticlePayload(articleManifest.ArticleId);
         }
 
         public static ArticlePayload ToArticlePayload(this byte[] subject, string id)
@@ -85,7 +85,7 @@ namespace nBlog.sdk.ArticlePackage
         }
 
 
-        public static ArticleManifest ReadManifest(this ArticlePayload subject) => ReadManifest(subject.ToBytes());
+        public static ArticleManifest ReadManifest(this ArticlePayload subject) => subject.ToBytes().ReadManifest();
 
         public static ArticleManifest ReadManifest(this byte[] payload)
         {

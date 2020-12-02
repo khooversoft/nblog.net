@@ -2,10 +2,11 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "site/aboutMe",
+    "ArticleId": "site/about-me",
     "PackageVersion": "1.0.0.0",
     "Title": "About Me",
     "Author": "khoover",
+    "Date": "2019-01-01T00:00:00",
 
     "Tags": [
       "me",

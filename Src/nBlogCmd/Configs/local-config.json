@@ -6,5 +6,5 @@
   "SourceFolder": "D:\\Sources\\nBlog.net\\BlogSource",
   "BuildFolder": "D:\\Work\\nBlogBuild",
 
-  "BlogStoreUrl": "http://localhost:5000"
+  "BlogStoreUrl": "http://localhost:5010"
 }

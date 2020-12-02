@@ -10,12 +10,12 @@ using Toolbox.Tools;
 
 namespace nBlog.sdk.Client
 {
-    public class BlogClient : IBlogClient
+    public class ArticleClient : IArticleClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<BlogClient> _logger;
+        private readonly ILogger<ArticleClient> _logger;
 
-        public BlogClient(HttpClient httpClient, ILogger<BlogClient> logger)
+        public ArticleClient(HttpClient httpClient, ILogger<ArticleClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;

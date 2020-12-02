@@ -82,6 +82,7 @@ namespace nBlogCmd
 
                 if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildActivity>().Build(cancellationTokenSource.Token));
                 if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<UploadActivity>().Upload(cancellationTokenSource.Token));
+                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<IndexActivity>().BuildAndUpload(cancellationTokenSource.Token));
 
                 executeQueue.Complete();
                 await executeQueue.Completion;
@@ -96,7 +97,6 @@ namespace nBlogCmd
         {
             var service = new ServiceCollection();
 
-
             service.AddLogging(x =>
             {
                 x.AddConsole();
@@ -104,10 +104,13 @@ namespace nBlogCmd
             });
 
             service.AddSingleton(option);
+
             service.AddSingleton<BuildActivity>();
             service.AddSingleton<UploadActivity>();
+            service.AddSingleton<IndexActivity>();
 
-            service.AddHttpClient<IBlogClient, BlogClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
+            service.AddHttpClient<IArticleClient, ArticleClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
+            service.AddHttpClient<IDirectoryClient, DirectoryClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
 
             return service.BuildServiceProvider();
         }

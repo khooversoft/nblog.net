@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using nBlog.Store.Application;
 using nBlog.Store.Services;
 using System.Threading.Tasks;
+using Toolbox.Extensions;
 using Toolbox.Logging;
 
 namespace nBlog.Store
@@ -45,6 +46,11 @@ namespace nBlog.Store
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
+                    if (!option.ApplicationUrl.IsEmpty())
+                    {
+                        webBuilder.UseUrls(option.ApplicationUrl.Split(';', System.StringSplitOptions.RemoveEmptyEntries));
+                    }
                 });
         }
     }

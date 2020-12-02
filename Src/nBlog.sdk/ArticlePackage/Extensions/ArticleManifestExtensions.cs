@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.ArticlePackage
+namespace nBlog.sdk.ArticlePackage.Extensions
 {
     public static class ArticleManifestExtensions
     {
