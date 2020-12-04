@@ -1,0 +1,20 @@
+﻿{
+  "PackageFile": "{articleId}.articlePackage",
+
+  "Manifest": {
+    "ArticleId": "site/landing-page",
+    "Title": "Landing Page",
+    "ImageFile": "cloud_computing-large.jpg"
+  },
+
+  "Copy": [
+    {
+      "Source": "{specFile}.md",
+      "Destination": "landing-page.md"
+    },
+    {
+      "Source": "cloud_computing-large.jpg",
+      "Destination": "cloud_computing-large.jpg"
+    }
+  ]
+}

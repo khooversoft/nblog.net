@@ -13,7 +13,7 @@ namespace nBlog.sdk.Model
         public string ArticleId
         {
             get => _articleId;
-            init => _articleId = Model.ArticleId.ConvertTo(value);
+            init => _articleId = new ArticleId(value).Id;
         }
 
         public string PackageVersion { get; init; } = "1.0.0.0";
@@ -29,5 +29,7 @@ namespace nBlog.sdk.Model
         public DateTime Date { get; init; } = DateTime.Now;
 
         public IList<string>? Tags { get; init; }
+
+        public IList<string>? Categories { get; init; }
     }
 }

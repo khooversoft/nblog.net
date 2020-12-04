@@ -20,12 +20,12 @@ namespace nBlog.sdk.Test
         [InlineData("a/a")]
         [InlineData("a-a")]
         [InlineData("a/a.b")]
+        [InlineData("A/A.b")]
         public void GivenValidArticleId_WhenVerified_ShouldPass(string id)
         {
-            ArticleId.ConvertTo(id);
-            _ = (ArticleId)id;
-            _ = (string)(ArticleId)id;
-            _ = (string)(new ArticleId(id));
+            _ = ((ArticleId)id).Id.Should().Be(id.ToLower());
+            _ = ((string)(ArticleId)id).Should().Be(id.ToLower());
+            _ = ((string)(new ArticleId(id))).Should().Be(id.ToLower());
         }
         
         [Theory]
@@ -41,10 +41,7 @@ namespace nBlog.sdk.Test
         [InlineData("1.")]
         public void GivenBadArticleId_WhenVerified_ShouldFail(string id)
         {
-            Action action = () => ArticleId.ConvertTo(id);
-            action.Should().Throw<ArgumentException>();
-
-            action = () => _ = (ArticleId)id;
+            Action action = () => _ = (ArticleId)id;
             action.Should().Throw<ArgumentException>();
 
             action = () => _ = (string)(ArticleId)id;

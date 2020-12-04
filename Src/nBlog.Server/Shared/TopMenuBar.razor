@@ -1,4 +1,7 @@
-﻿<div class="top-row px-4 fixed-top">
+﻿@using NBlog.Server.Application;
+@using nBlog.sdk.ArticlePackage;
+
+<div class="top-row px-4 fixed-top">
     <div class="container">
         <nav class="navbar justify-content-between">
             <div class="row">
@@ -12,17 +15,15 @@
                     </ul>
                 </div>
             </div>
-            <div>
-                Kelvin Hoover
-            </div>
             <div class="form-inline">
                 @if (!ShowSearch)
                 {
-                    <NavLink class="program-top-menu-item program-color" href="">Home</NavLink>
-                    <NavLink class="program-top-menu-item" href="">Articles</NavLink>
-                    <NavLink class="program-top-menu-item" href="">Projects</NavLink>
+                    <NavLink class="program-top-menu-item program-color" href="@NavRoutes.GotoIndex()">Home</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticleArea(ArticleArea.Article)">Articles</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticleArea(ArticleArea.Project)">Projects</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticle((string)NavRoutes.ArticleIds.Customers)">Customers</NavLink>
                     <NavLink class="program-top-menu-item" href="">For Hire</NavLink>
-                    <NavLink class="program-top-menu-item" href="">Contact</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticle((string)NavRoutes.ArticleIds.AboutMe)">Contact</NavLink>
 
                     <NavLink @onclick="ToggleCollapse" href=""><span class="oi oi-magnifying-glass program-color"></span></NavLink>
                 }

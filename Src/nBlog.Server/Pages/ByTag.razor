@@ -1,22 +1,14 @@
-﻿@page "/"
-@page "/index/{area}"
+﻿@page "/tag/{base64}"
 
 @using nBlog.sdk.Model;
 @using NBlog.Server.Services;
 @using NBlog.Server.Model;
-@using nBlog.sdk.ArticlePackage;
-@using nBlog.sdk.ArticlePackage.Extensions;
-@using Toolbox.Extensions;
-
-@if (Area.IsEmpty())
-{
-    <Banner />
-}
+@using System.Text;
 
 <div class="row mt-md-5">
     <div class="col-md-9">
         <div class="row">
-            <span class="font-weight-light">@ArticleTitle</span>
+            <span class="font-weight-light">@Title</span>
         </div>
         <div class="row">
             @foreach (var item in Articles)
@@ -34,7 +26,7 @@
     private const int _maxPage = 10;
 
     [Parameter]
-    public string? Area { get; set; }
+    public string Base64 { get; set; } = null!;
 
     [Inject]
     public DirectoryService DirectoryService { get; set; } = null!;
@@ -44,29 +36,14 @@
 
     private IReadOnlyList<ArticleCache> Articles { get; set; } = Array.Empty<ArticleCache>();
 
-    private ArticleArea? SelectedArticleArea { get; set; }
-
-    private string ArticleTitle { get; set; } = null!;
+    private string Title { get; set; } = null!;
 
     protected override async Task OnParametersSetAsync()
     {
-        SelectedArticleArea = Area?.ToArticleAreaOrDefault();
+        string tag = Encoding.UTF8.GetString(Convert.FromBase64String(Base64));
+        Title = $"Recent post for {tag}...";
 
-        ArticleTitle = SelectedArticleArea switch
-        {
-            ArticleArea.Article => "Recent article posts ...",
-            ArticleArea.Project => "Recent projects posts ...",
-
-            _ => "Recent post ...",
-        };
-
-        IReadOnlyList<ArticleManifest> manifests = await (SelectedArticleArea switch
-        {
-            ArticleArea.Article => DirectoryService.ByDate(ArticleArea.Article, 0, _maxPage),
-            ArticleArea.Project => DirectoryService.ByDate(ArticleArea.Project, 0, _maxPage),
-
-            _ => DirectoryService.ForHomePage(0, _maxPage),
-        });
+        IReadOnlyList<ArticleManifest> manifests = await DirectoryService.GetByTag(tag, 0, _maxPage);
 
         var list = new List<ArticleCache>();
         foreach (var item in manifests)

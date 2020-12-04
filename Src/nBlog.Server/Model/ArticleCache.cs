@@ -27,6 +27,6 @@ namespace NBlog.Server.Model
 
         public byte[] GetPackageItem(string path) => ArticlePayload.GetPackageItem(path);
 
-        public string GetIndexName() => GetArticleManifest().ArticleId.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
+        public string GetIndexName() => GetArticleManifest().ArticleId.Split('/', StringSplitOptions.RemoveEmptyEntries).Last() + ".md";
     }
 }

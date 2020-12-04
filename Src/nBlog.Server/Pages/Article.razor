@@ -1,0 +1,33 @@
+﻿@page "/article/{area}/{id}"
+
+@using nBlog.sdk.Model;
+@using NBlog.Server.Services;
+@using NBlog.Server.Model;
+
+<div id="markdown" class="row mt-md-5 mb-md-5">
+    <div class="col-md-12">
+        @((MarkupString)Html)
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string Area { get; set; } = null!;
+
+    [Parameter]
+    public string Id { get; set; } = null!;
+
+    [Inject]
+    public ArticleService ArticleService { get; set; } = null!;
+
+    private ArticleCache? ArticleCache { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ArticleCache = await ArticleService.Get(new ArticleId($"{Area}/{Id}"));
+    }
+
+    private string Html => ArticleCache?.GetIndexMd()?.ToHtml() ?? "<none>";
+}

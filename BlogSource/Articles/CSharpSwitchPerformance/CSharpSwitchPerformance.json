@@ -2,7 +2,7 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/csharp-switch-performance",
+    "ArticleId": "article/csharp-switch-performance",
     "PackageVersion": "1.0.0.0",
     "Title": "C# Switch Performance",
     "Author": "khoover",
@@ -12,9 +12,12 @@
 
     "Tags": [
       "C#",
-      "switch",
-      "performance",
       ".Net"
+    ],
+
+    "Categories": [
+      "Language",
+      "Performance"
     ]
   },
 

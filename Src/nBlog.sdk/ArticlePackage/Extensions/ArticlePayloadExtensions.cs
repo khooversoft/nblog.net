@@ -1,7 +1,9 @@
 ﻿using nBlog.sdk.Model;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Cryptography;
 using Toolbox.Tools;
 
@@ -60,17 +62,17 @@ namespace nBlog.sdk.ArticlePackage.Extensions
             subject.VerifyAssert(x => x?.Length > 0, $"{nameof(subject)} is empty");
 
             ArticleManifest articleManifest = subject.ReadManifest();
-            return subject.ToArticlePayload(articleManifest.ArticleId);
+            return subject.ToArticlePayload((ArticleId)articleManifest.ArticleId);
         }
 
-        public static ArticlePayload ToArticlePayload(this byte[] subject, string id)
+        public static ArticlePayload ToArticlePayload(this byte[] subject, ArticleId articleId)
         {
             subject.VerifyAssert(x => x?.Length > 0, $"{nameof(subject)} is empty");
-            id.VerifyNotEmpty(nameof(id));
+            articleId.VerifyNotNull(nameof(articleId));
 
             var payload = new ArticlePayload
             {
-                Id = ArticleId.ConvertTo(id),
+                Id = (string)articleId,
                 PackagePayload = Convert.ToBase64String(subject),
                 Hash = Convert.ToBase64String(MD5.Create().ComputeHash(subject)),
             };
@@ -97,6 +99,16 @@ namespace nBlog.sdk.ArticlePackage.Extensions
             fileStream.CopyTo(memoryReader);
 
             return memoryReader.ToArray();
+        }
+
+        public static IReadOnlyList<string> GetPackageEntries(this ArticlePayload subject) => subject.ToBytes().GetPackageEntries();
+
+        public static IReadOnlyList<string> GetPackageEntries(this byte[] payload)
+        {
+            using Stream payloadStream = new MemoryStream(payload);
+            using var zipArchive = new ZipArchive(payloadStream, ZipArchiveMode.Read, false);
+
+            return zipArchive.Entries.Select(x => x.Name).ToList();
         }
     }
 }

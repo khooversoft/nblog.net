@@ -6,19 +6,13 @@
     "PackageVersion": "1.0.0.0",
     "Title": "About Me",
     "Author": "khoover",
-    "Summary": "something about me",
-    "Date": "2019-01-01T00:00:00",
-    "ImageFile": "person-icon-blue-13.png"
+    "Date": "2019-01-01T00:00:00"
   },
 
   "Copy": [
     {
       "Source": "{specFile}.md",
       "Destination": "about-me.md"
-    },
-    {
-      "Source": "person-icon-blue-13.png",
-      "Destination": "person-icon-blue-13.png"
     }
   ]
 }

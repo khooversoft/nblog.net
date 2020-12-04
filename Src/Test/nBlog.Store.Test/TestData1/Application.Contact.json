@@ -2,7 +2,7 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/contact",
+    "ArticleId": "article/contact",
     "Title": "Contact",
     "Author": "Ghost Writer",
     "Summary": "This is summary",
@@ -11,6 +11,11 @@
     "Tags": [
       "Tag1",
       "Tag2"
+    ],
+
+    "Categories": [
+      "Language",
+      "Performance"
     ]
   },
 

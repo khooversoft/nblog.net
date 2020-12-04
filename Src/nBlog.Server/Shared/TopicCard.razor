@@ -1,14 +1,14 @@
 ﻿@using NBlog.Server.Services;
-
+@using NBlog.Server.Application;
 
 <div class="row col-md-12 rounded border mb-md-2">
     <div class="row col-md-12 mt-md-3 mb-md-3">
         <span class="font-weight-bold">Topics</span>
     </div>
-    <div class="row col-md-12">
+    <div class="row col-md-12 pb-2">
         @foreach (var item in Tags)
         {
-            <NavLink href="" class="btn border topic-btn">@item</NavLink>
+            <NavLink href="@NavRoutes.GotoByTag(item)" class="btn border topic-btn">@item</NavLink>
         }
     </div>
 </div>

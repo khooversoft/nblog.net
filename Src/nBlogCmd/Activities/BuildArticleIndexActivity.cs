@@ -9,44 +9,43 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Toolbox.Tools;
 
 namespace nBlogCmd.Activities
 {
-    internal class IndexActivity
+    internal class BuildArticleIndexActivity
     {
-        private readonly ILogger<IndexActivity> _logger;
+        private readonly ILogger<BuildArticleIndexActivity> _logger;
         private readonly Option _option;
-        private readonly IDirectoryClient _directoryClient;
 
-        public IndexActivity(Option option, IDirectoryClient directoryClient, ILogger<IndexActivity> logger)
+        public BuildArticleIndexActivity(Option option, ILogger<BuildArticleIndexActivity> logger)
         {
             _option = option;
-            _directoryClient = directoryClient;
             _logger = logger;
         }
 
-        public async Task BuildAndUpload(CancellationToken token)
+        public async Task Build(CancellationToken token)
         {
-            _logger.LogInformation($"{nameof(BuildAndUpload)} - Build");
+            _logger.LogInformation($"{nameof(Build)} - Build");
 
             Context context = new();
             await ScanManifest(context, token);
 
-            _logger.LogInformation($"{nameof(BuildAndUpload)}: Count={context.Queue.Count}");
+            _logger.LogInformation($"{nameof(Build)}: Count={context.Queue.Count}");
             var directory = new ArticleDirectory
             {
                 Articles = context.Queue.ToList(),
             };
 
-            _logger.LogInformation($"{nameof(BuildAndUpload)} - Upload");
-            await _directoryClient.Set(directory);
+            WriteDirectoryToObjFolder(directory);
         }
 
         private async Task ScanManifest(Context context, CancellationToken token)
         {
             ActionBlock<string> activities = new ActionBlock<string>(x => ReadManifest(context, x, token), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 });
 
-            string objFolder = Path.Combine(_option.BuildFolder!, ArticleConstants.ObjFolderName);
+            string objFolder = ArticleConstants.Folders.GetObjFolder(_option.BuildFolder!);
+
             string[] specFilePaths = Directory.GetFiles(objFolder, "*.json", SearchOption.AllDirectories);
             _logger.LogInformation($"{nameof(ScanManifest)}: ObjFolder={objFolder}, Count={specFilePaths.Length}");
 
@@ -65,6 +64,14 @@ namespace nBlogCmd.Activities
 
             ArticleManifest articleManifest = new ArticleManifestFile(specFilePath).Read();
             context.Queue.Enqueue(articleManifest);
+        }
+
+        private void WriteDirectoryToObjFolder(ArticleDirectory directory)
+        {
+            string json = Json.Default.Serialize(directory);
+            string directoryPath = ArticleConstants.Files.GetDirectoryFile(_option.BuildFolder!);
+
+            File.WriteAllText(directoryPath, json);
         }
 
         private record Context

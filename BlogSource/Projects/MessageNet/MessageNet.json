@@ -2,7 +2,7 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/message-net",
+    "ArticleId": "article/message-net",
     "PackageVersion": "1.0.0.0",
     "Title": "Message Net",
     "Author": "khoover",
@@ -12,7 +12,13 @@
 
     "Tags": [
       ".Net",
-      "performance"
+      "Azure",
+      "Service Bus"
+    ],
+
+    "Categories": [
+      "Azure",
+      "Micro Services"
     ]
   },
 

@@ -2,17 +2,18 @@
 @using NBlog.Server.Model;
 @using Toolbox.Extensions;
 @using System.IO;
+@using NBlog.Server.Application;
+@using nBlog.sdk.ArticlePackage.Extensions;
 
 <div class="card border-0 mb-3" style="width:100%">
     <div class="row no-gutters">
-        <div class="col-md-3 p-md-2">
-            <img src="@ImageSrc" class="card-img" style="max-height: 250px" />
-            @*<img src="@Manifest.ImageFile" class="card-img" />*@
+        <div class="col-md-2 p-md-2">
+            <img src="@ImageSrc" class="card-img" style="max-height: 250px;max-width:110px" />
         </div>
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card-body">
                 <h4 class="card-title">
-                    <NavLink href="">@Manifest.Title</NavLink>
+                    <NavLink href="@ArticleLink">@Manifest.Title</NavLink>
                 </h4>
                 <p>@AuthorText</p>
                 <p class="card-text">@Manifest.Summary</p>
@@ -21,21 +22,21 @@
                     <div class="col-md-12">
                         <hr class="card-footer-divider" />
                     </div>
-                    <div class="col-md-12 pt-1">
+                    <div class="col-md-2">
+                        <NavLink class="btn-blog" href="@ArticleLink">Read more <span class="oi oi-arrow-right"></span></NavLink>
+                    </div>
+                    <div class="col-md-10 pt-1">
 
                         @if (Manifest.Tags != null && Manifest.Tags.Count > 0)
                         {
-                            @foreach (var item in (Manifest.Tags ?? Array.Empty<string>()))
+                            @foreach (var item in Manifest.GetReferences())
                             {
                                 <div class="float-right">
-                                    <NavLink class="btn border topic-btn-small" href="">@item</NavLink>
+                                    <NavLink class="btn border topic-btn-small" href="@NavRoutes.GotoByTag(item)">@item</NavLink>
                                 </div>
                             }
                         }
                     </div>
-                </div>
-                <div class="mb-4">
-                    <NavLink class="btn-blog" href="">Read more <span class="oi oi-arrow-right"></span></NavLink>
                 </div>
             </div>
         </div>
@@ -55,9 +56,7 @@
         if (Manifest.ImageFile.IsEmpty()) return string.Empty;
 
         byte[] bytes = ArticleCache.GetPackageItem(Manifest.ImageFile);
-        string base64 = Convert.ToBase64String(bytes);
-
-        return base64;
+        return Convert.ToBase64String(bytes);
     }
 
     private string ImageSrc
@@ -70,4 +69,6 @@
             return $"data:image/{extension};base64, {GetIconImageBase64()}";
         }
     }
+
+    private string ArticleLink => NavRoutes.GotoArticle(Manifest.ArticleId);
 }

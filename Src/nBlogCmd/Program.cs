@@ -80,9 +80,15 @@ namespace nBlogCmd
 
                 var executeQueue = new ActionBlock<Func<Task>>(async x => await x());
 
-                if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildActivity>().Build(cancellationTokenSource.Token));
-                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<UploadActivity>().Upload(cancellationTokenSource.Token));
-                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<IndexActivity>().BuildAndUpload(cancellationTokenSource.Token));
+                if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<ClearBuildFolderActivity>().Clear());
+
+                if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildArticlesActivity>().Build(cancellationTokenSource.Token));
+
+                if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildArticleIndexActivity>().Build(cancellationTokenSource.Token));
+                if (option.Build) await executeQueue.SendAsync(() => container.GetRequiredService<BuildWordIndexActivity>().Build(cancellationTokenSource.Token));
+
+                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<UploadArticlesActivity>().Upload(cancellationTokenSource.Token));
+                if (option.Upload) await executeQueue.SendAsync(() => container.GetRequiredService<UploadDirectoryActivity>().Upload(cancellationTokenSource.Token));
 
                 executeQueue.Complete();
                 await executeQueue.Completion;
@@ -105,9 +111,14 @@ namespace nBlogCmd
 
             service.AddSingleton(option);
 
-            service.AddSingleton<BuildActivity>();
-            service.AddSingleton<UploadActivity>();
-            service.AddSingleton<IndexActivity>();
+            service.AddSingleton<ClearBuildFolderActivity>();
+            service.AddSingleton<BuildArticlesActivity>();
+
+            service.AddSingleton<BuildArticleIndexActivity>();
+            service.AddSingleton<BuildWordIndexActivity>();
+
+            service.AddSingleton<UploadArticlesActivity>();
+            service.AddSingleton<UploadDirectoryActivity>();
 
             service.AddHttpClient<IArticleClient, ArticleClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
             service.AddHttpClient<IDirectoryClient, DirectoryClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));

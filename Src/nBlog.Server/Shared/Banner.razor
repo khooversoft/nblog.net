@@ -1,0 +1,50 @@
+﻿@using nBlog.sdk.Model;
+@using NBlog.Server.Model;
+@using Toolbox.Extensions;
+@using System.IO;
+@using NBlog.Server.Services;
+@using NBlog.Server.Application;
+
+@if (ArticleCache != null)
+{
+    <div class="row col-md-12 no-gutters p-0">
+        <img src="@ImageSrc" class="program-banner-image" />
+        <div id="banner" class="program-banner-image-centered col-md-8">@((MarkupString)Html)</div>
+    </div>
+}
+
+@code {
+
+    [Inject]
+    public ArticleService ArticleService { get; set; } = null!;
+
+    private ArticleCache? ArticleCache { get; set; }
+
+    public ArticleManifest? Manifest => ArticleCache?.GetArticleManifest();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ArticleCache = await ArticleService.Get(NavRoutes.ArticleIds.LandingPage);
+    }
+
+    private string ImageSrc
+    {
+        get
+        {
+            if (Manifest == null || Manifest.ImageFile.IsEmpty()) return string.Empty;
+
+            string extension = Path.GetExtension(Manifest!.ImageFile)!.Remove(0);
+            return $"data:image/{extension};base64, {getIconImageBase64()}";
+
+            string getIconImageBase64()
+            {
+                byte[] bytes = ArticleCache!.GetPackageItem(Manifest!.ImageFile!);
+                string base64 = Convert.ToBase64String(bytes);
+
+                return base64;
+            }
+        }
+    }
+
+    private string Html => ArticleCache?.GetIndexMd()?.ToHtml() ?? "Passion for .Net programming";
+}

@@ -19,6 +19,7 @@ namespace nBlog.sdk.ArticlePackage
         private string _specFile = null!;
         private string _specFileBase = null!;
         private string _buildFolder = null!;
+        private string _objFolder = null!;
 
         public ArticleSpec ArticleSpec { get; private set; } = null!;
 
@@ -36,11 +37,14 @@ namespace nBlog.sdk.ArticlePackage
 
         public ArticlePackageBuilder SetBuildFolder(string buildFolder) => this.Action(x => _buildFolder = buildFolder);
 
+        public ArticlePackageBuilder SetObjFolder(string objFolder) => this.Action(x => _objFolder = objFolder);
+
         public string Build(Action<FileActionProgress>? monitor = null, CancellationToken token = default)
         {
             _specFile.VerifyNotEmpty("Specification file not read");
             _specFileBase.VerifyNotEmpty("Specification file not read");
             _buildFolder.VerifyNotEmpty("Deployment folder not specified");
+            _objFolder.VerifyNotEmpty("Obj folder not specified");
 
             ArticleSpec = new ArticleSpecFile(_specFile).Read();
 
@@ -52,7 +56,7 @@ namespace nBlog.sdk.ArticlePackage
                 .Append(WriteManifest())
                 .ToArray();
 
-            string zipFilePath = Path.Combine(_buildFolder, ArticleConstants.PackageFolderName, ArticleSpec.PackageFile);
+            string zipFilePath = Path.Combine(_buildFolder, ArticleSpec.PackageFile);
 
             Directory.CreateDirectory(Path.GetDirectoryName(zipFilePath)!);
 
@@ -85,7 +89,7 @@ namespace nBlog.sdk.ArticlePackage
 
         private CopyTo WriteManifest()
         {
-            string filePath = Path.Combine(_buildFolder, ArticleConstants.ObjFolderName, $"{Path.GetFileNameWithoutExtension(_specFile)}_{Guid.NewGuid()}_{ArticleConstants.ManifestFileName}");
+            string filePath = Path.Combine(_objFolder, $"{Path.GetFileNameWithoutExtension(_specFile)}_{Guid.NewGuid()}_{ArticleConstants.ManifestFileName}");
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
             ArticleSpec.Manifest.WriteToFile(filePath);

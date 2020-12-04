@@ -26,6 +26,7 @@ namespace nBlog.sdk.Test
             articleSpec.Manifest.Date.Should().Be(new DateTime(2020, 1, 2));
 
             Enumerable.SequenceEqual(articleSpec.Manifest.Tags, new[] { "Tag1", "Tag2" }).Should().BeTrue();
+            Enumerable.SequenceEqual(articleSpec.Manifest.Categories, new[] { "Category1", "Category2" }).Should().BeTrue();
         }
     }
 }

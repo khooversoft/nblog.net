@@ -25,7 +25,7 @@ namespace nBlog.Store.Test
 
             byte[] bytes = Encoding.UTF8.GetBytes(payload);
 
-            ArticlePayload articlePayload = bytes.ToArticlePayload(id);
+            ArticlePayload articlePayload = bytes.ToArticlePayload((ArticleId)id);
 
             await host.ArticleClient.Set(articlePayload);
 
@@ -79,6 +79,7 @@ namespace nBlog.Store.Test
             articleManifest.ImageFile.Should().Be(readArticleManifest.ImageFile);
             articleManifest.Date.Should().Be(readArticleManifest.Date);
             Enumerable.SequenceEqual(articleManifest.Tags!, readArticleManifest.Tags!).Should().BeTrue();
+            Enumerable.SequenceEqual(articleManifest.Categories!, readArticleManifest.Categories!).Should().BeTrue();
 
             (articlePayload == readPayload).Should().BeTrue();
 

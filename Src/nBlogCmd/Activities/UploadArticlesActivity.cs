@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using nBlog.sdk.ArticlePackage;
 using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Client;
 using nBlog.sdk.Model;
@@ -10,13 +11,13 @@ using System.Threading.Tasks.Dataflow;
 
 namespace nBlogCmd.Activities
 {
-    internal class UploadActivity
+    internal class UploadArticlesActivity
     {
         private readonly IArticleClient _blogClient;
-        private readonly ILogger<BuildActivity> _logger;
+        private readonly ILogger<BuildArticlesActivity> _logger;
         private readonly Option _option;
 
-        public UploadActivity(Option option, IArticleClient blogClient, ILogger<BuildActivity> logger)
+        public UploadArticlesActivity(Option option, IArticleClient blogClient, ILogger<BuildArticlesActivity> logger)
         {
             _option = option;
             _blogClient = blogClient;
@@ -27,7 +28,7 @@ namespace nBlogCmd.Activities
         {
             ActionBlock<string> activities = new ActionBlock<string>(async x => await UploadPackage(x, token), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1 });
 
-            string folder = Path.Combine(_option.BuildFolder!, Constants.PackageFolderName);
+            string folder = ArticleConstants.Folders.GetPackageFolder(_option.BuildFolder!);
             string[] specFilePaths = Directory.GetFiles(folder, "*.articlePackage", SearchOption.AllDirectories);
 
             foreach (var filePath in specFilePaths)

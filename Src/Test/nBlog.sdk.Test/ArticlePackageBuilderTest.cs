@@ -62,7 +62,7 @@ namespace nBlog.sdk.Test
                 .Build();
 
             byte[] fileBytes = File.ReadAllBytes(packageFile);
-            ArticlePayload articlePayload = fileBytes.ToArticlePayload("id");
+            ArticlePayload articlePayload = fileBytes.ToArticlePayload((ArticleId)"id");
 
             ArticleManifest articleManifest = articlePayload.ReadManifest();
 

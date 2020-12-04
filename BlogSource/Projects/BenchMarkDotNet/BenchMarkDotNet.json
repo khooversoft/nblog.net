@@ -2,7 +2,7 @@
   "PackageFile": "{articleId}.articlePackage",
 
   "Manifest": {
-    "ArticleId": "articles/bench-mark-dotnet",
+    "ArticleId": "article/bench-mark-dotnet",
     "PackageVersion": "1.0.0.0",
     "Title": "Bench Mark Performance Testing for .Net",
     "Author": "khoover",
@@ -11,8 +11,11 @@
     "Date": "2019-01-03T00:00:00",
 
     "Tags": [
-      ".Net",
-      "performance"
+      ".Net"
+    ],
+
+    "Categories": [
+      "Performance"
     ]
   },
 

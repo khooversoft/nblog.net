@@ -1,20 +1,28 @@
-﻿<div class="row col-md-12 rounded border mb-md-2">
+﻿@using NBlog.Server.Application;
+@using NBlog.Server.Services;
+
+<div class="row col-md-12 rounded border mb-md-2">
     <div class="row col-md-12 mt-md-3 mb-md-3">
         <span class="font-weight-bold">Categories</span>
     </div>
     <ul class="nav flex-column">
-        <li>
-            <NavLink href="" Match="NavLinkMatch.All">Home</NavLink>
-        </li>
-        <li>
-            <NavLink href="counter">Counter</NavLink>
-        </li>
-        <li>
-            <NavLink href="fetchdata">Fetch data</NavLink>
-        </li>
+        @foreach (var item in Categories)
+        {
+            <li>
+                <NavLink href="@NavRoutes.GotoByTag(item)" >@item</NavLink>
+            </li>
+        }
     </ul>
 </div>
 
 @code {
+    [Inject]
+    public DirectoryService DirectoryService { get; set; } = null!;
 
+    private IReadOnlyList<string> Categories { get; set; } = Array.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await DirectoryService.GetCategories();
+    }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Extensions;
 using Toolbox.Tools;
 
 namespace NBlog.Server.Model
@@ -12,11 +13,11 @@ namespace NBlog.Server.Model
     {
         private string? _html;
 
-        public MarkdownDoc(byte[] bytes)
+        public MarkdownDoc(byte[] data)
         {
-            bytes.VerifyNotNull(nameof(bytes));
+            data.VerifyNotNull(nameof(data));
 
-            MdSource = Encoding.UTF8.GetString(bytes);
+            MdSource = Encoding.UTF8.GetString(data.RemoveBOM());
         }
 
         public string MdSource { get; init; }

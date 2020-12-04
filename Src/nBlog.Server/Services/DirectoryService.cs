@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Client;
 using nBlog.sdk.Model;
 using System;
@@ -22,11 +24,22 @@ namespace NBlog.Server.Services
             _logger = logger;
         }
 
-        public async Task<IReadOnlyList<ArticleManifest>> ByDate(int index, int count)
+        public async Task<IReadOnlyList<ArticleManifest>> ForHomePage(int index, int count)
         {
             ArticleDirectory? articleDirectory = await GetDirectory();
 
-            return (articleDirectory?.Articles ?? Array.Empty<ArticleManifest>())
+            return (articleDirectory?.Get(ArticleArea.Article, ArticleArea.Project) ?? Array.Empty<ArticleManifest>())
+                .OrderByDescending(x => x.Date)
+                .Skip(index)
+                .Take(count)
+                .ToArray();
+        }
+
+        public async Task<IReadOnlyList<ArticleManifest>> ByDate(ArticleArea articleArea, int index, int count)
+        {
+            ArticleDirectory? articleDirectory = await GetDirectory();
+
+            return (articleDirectory?.Get(articleArea) ?? Array.Empty<ArticleManifest>())
                 .OrderByDescending(x => x.Date)
                 .Skip(index)
                 .Take(count)
@@ -38,7 +51,18 @@ namespace NBlog.Server.Services
             ArticleDirectory? articleDirectory = await GetDirectory();
 
             return (articleDirectory?.Articles ?? Array.Empty<ArticleManifest>())
-                .SelectMany(x => x.Tags ?? Array.Empty<string>())
+                .SelectMany(x => x.GetTagList())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x)
+                .ToList();
+        }
+
+        public async Task<IReadOnlyList<string>> GetCategories()
+        {
+            ArticleDirectory? articleDirectory = await GetDirectory();
+
+            return (articleDirectory?.Articles ?? Array.Empty<ArticleManifest>())
+                .SelectMany(x => x.GetCategoryList())
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .OrderBy(x => x)
                 .ToList();
@@ -48,8 +72,7 @@ namespace NBlog.Server.Services
         {
             ArticleDirectory? articleDirectory = await GetDirectory();
 
-            return (articleDirectory?.Articles ?? Array.Empty<ArticleManifest>())
-                .Where(x => (x.Tags ?? Array.Empty<string>()).Contains(tag, StringComparer.OrdinalIgnoreCase))
+            return (articleDirectory?.GetByTag(tag) ?? Array.Empty<ArticleManifest>())
                 .OrderByDescending(x => x.Date)
                 .Skip(index)
                 .Take(count)

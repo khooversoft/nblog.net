@@ -33,6 +33,8 @@ namespace nBlog.sdk.Actors.Directory
 
             if (acticleDirectory == null) return null;
 
+            _logger.LogInformation($"{nameof(DirectoryActor)} *** actorKey={base.ActorKey}, articleDirectory={acticleDirectory}");
+
             _cache.Set(acticleDirectory);
             return acticleDirectory;
         }

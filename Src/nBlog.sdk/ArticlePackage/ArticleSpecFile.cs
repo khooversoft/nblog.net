@@ -1,11 +1,8 @@
 ﻿using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Model;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Model;
 using Toolbox.Services;
@@ -49,6 +46,7 @@ namespace nBlog.sdk.ArticlePackage
                     ImageFile = spec.Manifest.ImageFile,
                     Date = spec.Manifest.Date,
                     Tags = spec.Manifest?.Tags?.Select(x => resolver.Resolve(x))?.ToList(),
+                    Categories = spec.Manifest?.Categories?.Select(x => resolver.Resolve(x))?.ToList(),
                 },
 
                 Copy = spec.Copy.Select(x => new CopyTo

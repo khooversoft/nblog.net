@@ -20,7 +20,7 @@ FizzBuzz References...
 
 ----------
 
-#### Business Rules
+## Business Rules
 FizzBuzz is a simple function that returns a specific value based an input after a set of rules have been evaluated.
 
  - if evenly divisible by 3 return "Fizz"
@@ -28,7 +28,7 @@ FizzBuzz is a simple function that returns a specific value based an input after
  - if evenly divisible by 3 or 5 return "FizzBuzz"
  - If 0 or any other value return this number as string
 
-#### Coding Strategies
+## Coding Strategies
 Each of the below 6 strategies were tested.
 
 1) If/else if logic
@@ -44,7 +44,7 @@ Each of the below 6 strategies were tested.
 ---------------
 
 
-### Results
+## Results
 BenchmarkDotNet was configured to track performance and memory and the following is the best 1 out of 3 runs.
 The delta between each run was very small.
 
@@ -64,7 +64,8 @@ It appears that switch is just as fast as pure if/else logic, which was a little
 |         CodeAsDataFor |   161.5 ns | 0.14 ns | 0.12 ns | 0.0343 |     - |     - |     216 B |
 |        CodeAsDataLinq | 1,135.2 ns | 1.60 ns | 1.33 ns | 0.2651 |     - |     - |    1672 B |
 
-###### Code Size
+
+## Code Size
 Visual Studio 2019 has the ability us some to provide code metrics.  I am most interested in size of code,
 coupling, and inheritance.  All of these test look about the same with regards to coupling and inheritance.
 So this just leaves size of code.
@@ -79,9 +80,9 @@ So this just leaves size of code.
 
 
 --------------
-### Code
+## Code
 
-###### If/else (fastest)
+### If/else (fastest)
 ```
 public string Evaluate(int value)
 {
@@ -94,7 +95,7 @@ public string Evaluate(int value)
 }
 ```
 
-###### C# switch expressions (fastest)
+### C# switch expressions (fastest)
 ```
 public string Evaluate(int value)
 {
@@ -110,7 +111,7 @@ public string Evaluate(int value)
 }
 ```
 
-###### Chain of Handlers
+### Chain of Handlers
 ```
 public interface IFizzBuzzChain
 {
@@ -163,7 +164,7 @@ public class FuzzBuzzChain : IFizzBuzzChain
 }
 ```
 
-###### Code as Data
+### Code as Data
 ```
 public class FizzBuzzCodeAsData
 {
@@ -191,7 +192,7 @@ public class FizzBuzzCodeAsData
 }
 ```
 
-###### Test function
+### Test function
 All the strategies use the same test function.
 
 ```

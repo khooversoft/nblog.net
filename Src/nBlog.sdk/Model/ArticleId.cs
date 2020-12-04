@@ -1,4 +1,6 @@
-﻿using System;
+﻿using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.ArticlePackage.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +13,8 @@ namespace nBlog.sdk.Model
     {
         public ArticleId(string id)
         {
-            VerifyId(id);
             Id = id.ToLower();
+            VerifyId();
         }
 
         public string Id { get; }
@@ -20,8 +22,6 @@ namespace nBlog.sdk.Model
         public string ToBase64() => Convert.ToBase64String(Encoding.UTF8.GetBytes(Id));
 
         public override string ToString() => Id;
-
-        public static ArticleId FromBase64(string base64) => new ArticleId(Encoding.UTF8.GetString(Convert.FromBase64String(base64)));
 
         public override int GetHashCode() => HashCode.Combine(Id);
 
@@ -35,19 +35,15 @@ namespace nBlog.sdk.Model
 
         public static explicit operator ArticleId(string id) => new ArticleId(id);
 
-        public static string ConvertTo(string id)
-        {
-            id.VerifyNotEmpty(nameof(id));
-            VerifyId(id);
-            return id.ToLower();
-        }
+        public static ArticleId FromBase64(string base64) => new ArticleId(Encoding.UTF8.GetString(Convert.FromBase64String(base64)));
 
-        public static void VerifyId(string id)
+        public void VerifyId()
         {
-            id.VerifyNotEmpty(id);
-            id.VerifyAssert(x => char.IsLetter(x[0]), "Must start with letter");
-            id.VerifyAssert(x => char.IsLetterOrDigit(x[^1]), "Must end with letter or number");
-            id.VerifyAssert(x => id.All(x => char.IsLetterOrDigit(x) || x == '.' || x == '/' || x == '-'), "Valid Id must be letter, number, '.', '/', or '-'");
+            Id.VerifyNotEmpty(nameof(Id));
+            Id.VerifyAssert(x => char.IsLetter(x[0]), "Must start with letter");
+            Id.VerifyAssert(x => char.IsLetterOrDigit(x[^1]), "Must end with letter or number");
+            Id.VerifyAssert(x => x.All(y => char.IsLetterOrDigit(y) || y == '.' || y == '/' || y == '-'), "Valid Id must be letter, number, '.', '/', or '-'");
+            Id.VerifyAssert(x => x.Split('/').Length > 0, "Missing area + id (ex: area/subject)");
         }
     }
 }

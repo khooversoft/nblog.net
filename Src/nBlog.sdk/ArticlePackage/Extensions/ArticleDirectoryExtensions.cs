@@ -15,14 +15,20 @@ namespace nBlog.sdk.ArticlePackage.Extensions
             .OrderByDescending(x => x.Date)
             .ToList();
 
-        public static IReadOnlyList<string> GetTags(this ArticleDirectory subject) => subject.Articles
-            .SelectMany(x => x.Tags ?? Array.Empty<string>())
+        public static IReadOnlyList<ArticleManifest> Get(this ArticleDirectory subject, params ArticleArea[] articleAreas) => subject.Articles
+            .Select(x => (subject: x, ArticleId: (ArticleId)x.ArticleId))
+            .Where(x => articleAreas.Any(y => x.ArticleId.IsArticleArea(y)))
+            .Select(x => x.subject)
+            .ToArray();
+
+        public static IReadOnlyList<string> GetReference(this ArticleDirectory subject) => subject.Articles
+            .SelectMany(x => x.GetReferences())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x)
             .ToList();
 
         public static IReadOnlyList<ArticleManifest> GetByTag(this ArticleDirectory subject, string tag) => subject.Articles
-            .Where(x => (x.Tags ?? Array.Empty<string>()).Contains(tag, StringComparer.OrdinalIgnoreCase))
+            .Where(x => x.GetReferences().Contains(tag, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         public static void Verify(this ArticleDirectory subject)
