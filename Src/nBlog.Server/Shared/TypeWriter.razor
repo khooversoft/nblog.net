@@ -1,0 +1,89 @@
+﻿
+@using System.Threading;
+@implements IDisposable
+
+<span class="program-color typewriter">@_title</span>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<string> Subjects { get; set; } = null!;
+
+    private string _title { get; set; } = string.Empty;
+    private Func<int>[]? _steps;
+    private int _currentStepIndex = 0;
+    private Timer? _timer;
+
+    private const int _endStep = 0;
+    private const int _backSpeed = 100;
+    private const int _typeingSpeed = 200;
+    private const int _waitAfterEnd = 1000;
+
+    protected override void OnParametersSet()
+    {
+        _steps = (Subjects ?? Array.Empty<string>())
+            .SelectMany(x => new Func<int>[] { () => ClearStep(x), () => TypeStep(x) })
+            .ToArray();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            StartTimer(_typeingSpeed);
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+
+    private int ClearStep(string nextTitle)
+    {
+        if (_title.Length == 0) return _endStep;
+
+        _title = _title.Length == 1 ? string.Empty : _title[..^2];
+
+        return nextTitle[..Math.Min(_title.Length, nextTitle.Length)] == _title ? _endStep : _backSpeed;
+    }
+
+    private int TypeStep(string title)
+    {
+        if (title.Length == _title.Length) return _endStep;
+
+        _title = title.Substring(0, _title.Length + 1);
+
+        return _title.EndsWith(" ") ? _backSpeed : _typeingSpeed;
+    }
+
+    private void StartTimer(int timeSpan) => _timer = new Timer(x => StartTyping(), null, TimeSpan.FromMilliseconds(timeSpan), Timeout.InfiniteTimeSpan);
+
+    private void StartTyping()
+    {
+        int sleep = _steps![_currentStepIndex]();
+
+        if (sleep > 0)
+        {
+            StartTimer(sleep);
+            InvokeAsync(() => StateHasChanged());
+            return;
+        }
+
+        _currentStepIndex++;
+
+        if (_currentStepIndex == _steps.Length)
+        {
+            _currentStepIndex = 0;
+        }
+
+        if (_currentStepIndex % 2 == 0)
+        {
+            StartTimer(_waitAfterEnd);
+            return;
+        }
+
+        StartTimer(_typeingSpeed);
+    }
+
+    public void Dispose()
+    {
+        Interlocked.Exchange(ref _timer, null)?.Dispose();
+    }
+}

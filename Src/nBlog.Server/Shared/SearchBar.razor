@@ -1,7 +1,19 @@
-﻿<input class="form-control" style="width:500px" type="text" placeholder="Enter search..." @oninput="@(x => OnSearchTextChange(x.Value?.ToString() ?? string.Empty))" />
+﻿@using NBlog.Server.Application;
+
+<input class="form-control" style="width:500px" type="text" placeholder="Enter search..." @oninput="@(x => OnSearchTextChange(x.Value?.ToString() ?? string.Empty))" />
+
 <button class="@SearchButtonClass" type="submit" @onclick="OnSearchClick" disabled="@(!IsSearchEnabled)">Search</button>
 
+<NavLink class="btn btn-outline-secondary" @onclick="ToggleSearch">Cancel</NavLink>
+
+
 @code {
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
     private string SearchText { get; set; } = string.Empty;
 
     public string SearchButtonClass => "btn ml-md-2 " + (IsSearchEnabled ? "btn-outline-success program-color" : "btn-outline-secondary text-muted disabled");
@@ -11,10 +23,14 @@
         SearchText = value;
     }
 
-    private Task OnSearchClick()
+    private async Task OnSearchClick()
     {
-        return Task.CompletedTask;
+        await OnCloseCallback.InvokeAsync();
+
+        NavigationManager.NavigateTo(NavRoutes.GotoSearch(SearchText));
     }
+
+    private async Task ToggleSearch() => await OnCloseCallback.InvokeAsync();
 
     private bool IsSearchEnabled => SearchText?.Length > 0;
 }

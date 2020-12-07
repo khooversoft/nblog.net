@@ -5,7 +5,6 @@
     "ArticleId": "article/bench-mark-dotnet",
     "PackageVersion": "1.0.0.0",
     "Title": "Bench Mark Performance Testing for .Net",
-    "Author": "khoover",
     "Summary": "Powerful .Net library for benchmarking.  This library helps you transform methods into benchmarks, track their performance, and share reproducible measurement experiments.",
     "ImageFile": "asp-net-core-logo.png",
     "Date": "2019-01-03T00:00:00",

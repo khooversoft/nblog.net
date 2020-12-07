@@ -1,8 +1,8 @@
 ﻿# About Me
 
-Hi, my name is Kelvin Hoover and I am a professional developer with over 20+
-years of experience with designing, developing, and building support for large scale systems
-in the cloud.
+Hi, my name is Kelvin Hoover and I am a professional developer with over 30+
+years of experience with designing, developing, and building large scale systems
+in the cloud and on premise.
 
 My passion is building cloud base services, AI / Machine Learning, big data, and large-scale compute.  I have over 10 years’ experience
 in designing and developing cloud web services & applications.have over 30 years’ experience in development large systems,
@@ -27,3 +27,9 @@ such as Azure Data Lake Analytics and DataBricks.
 | ----------- | --------------------------------------------- |
 | LinkedIn    | www.linkedin.com/in/kelvin-hoover-khooversoft |
 | GitHub      | https://github.com/khooversoft                |
+
+
+Here goes images
+
+Inline-style: 
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")

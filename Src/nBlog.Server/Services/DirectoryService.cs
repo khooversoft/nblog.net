@@ -79,6 +79,20 @@ namespace NBlog.Server.Services
                 .ToArray();
         }
 
+        public async Task<IReadOnlyList<ArticleManifest>> Search(string line)
+        {
+            ArticleDirectory? articleDirectory = await GetDirectory();
+            if (articleDirectory == null) return Array.Empty<ArticleManifest>();
+
+            IReadOnlyList<ArticleManifest> articleManifests = new ArticleDirectorySearch(articleDirectory)
+                .Search(line)
+                .Join(articleDirectory.Articles, x => (string)x.Id, x => x.ArticleId, (o, i) => i, StringComparer.OrdinalIgnoreCase)
+                .Where(x => ((ArticleId)x.ArticleId).IsArticleArea(ArticleArea.Site) == false)
+                .ToList();
+
+            return articleManifests;
+        }
+
         private async Task<ArticleDirectory?> GetDirectory()
         {
             ArticleDirectory? subject;

@@ -22,16 +22,15 @@
                     <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticleArea(ArticleArea.Article)">Articles</NavLink>
                     <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticleArea(ArticleArea.Project)">Projects</NavLink>
                     <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticle((string)NavRoutes.ArticleIds.Customers)">Customers</NavLink>
-                    <NavLink class="program-top-menu-item" href="">For Hire</NavLink>
-                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoArticle((string)NavRoutes.ArticleIds.AboutMe)">Contact</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoAboutMe()">For Hire</NavLink>
+                    <NavLink class="program-top-menu-item" href="@NavRoutes.GotoContact()">Contact</NavLink>
 
-                    <NavLink @onclick="ToggleCollapse" href=""><span class="oi oi-magnifying-glass program-color"></span></NavLink>
+                    <NavLink @onclick="ToggleSearch" href=""><span class="oi oi-magnifying-glass program-color"></span></NavLink>
                 }
                 else
                 {
                     <div>
-                        <SearchBar />
-                        <NavLink class="btn btn-outline-secondary" @onclick="ToggleCollapse">Cancel</NavLink>
+                        <SearchBar OnCloseCallback="@CloseHandler" />
                     </div>
                 }
             </div>
@@ -42,5 +41,7 @@
 @code {
     private bool ShowSearch { get; set; } = false;
 
-    private void ToggleCollapse() => ShowSearch = !ShowSearch;
+    private void ToggleSearch() => ShowSearch = true;
+
+    private void CloseHandler() => ShowSearch = false;
 }

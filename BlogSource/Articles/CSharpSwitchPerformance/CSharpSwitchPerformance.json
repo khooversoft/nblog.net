@@ -5,7 +5,6 @@
     "ArticleId": "article/csharp-switch-performance",
     "PackageVersion": "1.0.0.0",
     "Title": "C# Switch Performance",
-    "Author": "khoover",
     "Summary": "One of the new features in C# 8.0 is the switch expression. I have been using most of the new features but I like this one the best. This new C# feature was taken from F# or functional programming.",    
     "ImageFile": "csharp-icon.png",
     "Date": "2020-08-15T00:00:00",

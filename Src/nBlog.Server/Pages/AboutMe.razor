@@ -1,0 +1,111 @@
+﻿@page "/about-me"
+
+<div class="row mt-5 mb-5 h-100">
+    <div class="col-md-4 my-auto">
+        <h2>Kelvin Hoover</h2>
+        I'm <TypeWriter Subjects="@_titles" />
+    </div>
+
+    <div class="col-md-8">
+        <div class="text-center">
+            <h3 class="mb-3 section-title">About Me</h3>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            Hi, my name is Kelvin Hoover and I am a professional developer with a over 30+
+            years of experience with designing, developing, and building large scale &amp; big data systems
+            in the cloud and on premise.
+            <p />
+            I strongly believing in collaboration, experimentation, and iteration.  Time and time again
+            I have witnessed how impactful these are to success and how risk and cost are reduced.
+            <p />
+            I am very passionate about what software and data can do for people and business.
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row experience-section mt-5">
+    <div class="col-md-12 mt-3 mb-5">
+        <div class="text-center">
+            <h2 class="mb-3 section-title">My Experience</h2>
+        </div>
+    </div>
+
+    <div class="row col-md-12 no-gutters">
+        <div class="col-md-6">
+            <h3 class="experience-block-title">Professional Experience</h3>
+
+            <div class="col-md-12 experience-block">
+                <h5>Software Engineering</h5>
+                <ul>
+                    <li>12+ years Consulting / Contract business</li>
+                    <li>18+ years Microsoft product groups</li>
+                    <li>10+ years Development Lead</li>
+                    <li>10+ years Development Manager</li>
+                    <li>8 years Group Program Manager / Technical Leader</li>
+                    <li>20+ years Architect</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 experience-block">
+                <h5>Platform Technologies</h5>
+                <ul>
+                    <li>12+ years Microsoft Azure</li>
+                    <li>1 year Amazon AWS</li>
+                    <li>3+ years Containers</li>
+                    <li>10+ years Big Data Analytics (ADLA/ADLS, DataBricks, Cosmos)</li>
+                    <li>20+ years Full Stack / API Services</li>
+                    <li>20+ years SQL / NoSql / DFS</li>
+                    <li>10+ years Distributed Actors</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h3 class="experience-block-title">Engagements</h3>
+
+            <div class="col-md-12 experience-block">
+                <h5>Recent Projects / Contracts</h5>
+                <ul>
+                    <li>AI / Machine Learning as a Service - Premera</li>
+                    <li>Big Data distributed build pipeline - Microsoft Bing/AI</li>
+                    <li>Big Data USQL code optimizer - Microsoft Bing/AI</li>
+                    <li>Distributed Ledger (Blockchain) - Smart Agreements</li>
+                    <li>Remix 3D front end services - Microsoft</li>
+                    <li>Windows License Server - Microsoft X-Box</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 experience-block">
+                <h5>Open Source Projects</h5>
+                <ul>
+                    <li>Azure DataLake Analytics USQL Language Parser &amp; Optimizer</li>
+                    <li>Machine Learning API Host and Reverse Proxy</li>
+                    <li>Cross platform Virtual Actor Model framework</li>
+                    <li>Path Finder - Experimentation &amp; Telemetry</li>
+                    <li>nBlog Blazor server (this site)</li>
+                    <li>Windows License Server - Microsoft X-Box</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <ContactCard />
+</div>
+
+
+@code {
+    private static string[] _titles = new[]
+{
+        "Full Stack Developer",
+        "Big data engineer",
+        "AI / Machine model developer",
+        "Designer",
+        "Program Manager",
+        "Technical Manager",
+    };
+}

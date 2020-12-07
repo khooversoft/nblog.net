@@ -12,6 +12,9 @@ namespace NBlog.Server.Application
         public static string GotoIndex() => "/";
         public static string GotoArticle(string id) => $"/article/{id}";
         public static string GotoByTag(string id) => $"/tag/{Convert.ToBase64String(Encoding.UTF8.GetBytes(id))}";
+        public static string GotoSearch(string searchLine) => $"/search/{Convert.ToBase64String(Encoding.UTF8.GetBytes(searchLine))}";
+        public static string GotoAboutMe() => "/about-me";
+        public static string GotoContact() => "/contact";
 
         public static class ArticleIds
         {

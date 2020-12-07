@@ -1,0 +1,72 @@
+﻿.article-card {
+    border: 0px;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+
+.btn-blog {
+    color: #232323;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+    .btn-blog:hover {
+        color: #2196f3;
+        text-decoration: none;
+    }
+
+.topic-btn {
+    padding: .2rem .5rem;
+    margin: 2px;
+}
+
+    .topic-btn:hover {
+        background-color: lightgray;
+    }
+
+.topic-btn-small {
+    padding: .1rem .25rem;
+    margin: 1px;
+    font-size: .8rem;
+}
+
+    .topic-btn-small:hover {
+        background-color: lightgray;
+    }
+
+
+.card-footer-divider {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    margin-top: .1rem;
+    margin-bottom: .1rem;
+}
+
+.program-banner-image {
+    object-fit: none; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */
+    width: 100%;
+    max-height: 200px;
+    margin-bottom: 1rem;
+    opacity: 0.1;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.program-banner-image-centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*color: #FFFFFF;*/
+    color: #000000;
+}
+
+#banner h1 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#banner p {
+    font-size: 1.2rem;
+}

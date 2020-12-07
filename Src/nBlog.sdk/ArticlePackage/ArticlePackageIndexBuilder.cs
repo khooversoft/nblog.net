@@ -15,19 +15,6 @@ namespace nBlog.sdk.ArticlePackage
     {
         private static readonly string[] _documentExtensionsToIndex = new[] { "md" };
 
-        private static readonly HashSet<string> _skipWords = new HashSet<string>
-        {
-            "and", "it", "you",
-        };
-
-        private static readonly char[] _tokenParse = new char[]
-        {
-            ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
-            ':', ';', '<', '=', '>', '?', '@',
-            '[', '\\', ']', '^', '_', '`',
-            '{', '!', '}', '~'
-        };
-
         public IReadOnlyList<WordCount> Build(string packageFile)
         {
             packageFile.VerifyNotEmpty(nameof(packageFile));
@@ -64,25 +51,7 @@ namespace nBlog.sdk.ArticlePackage
             byte[] documentBytes = articlePayload.GetPackageItem(documentPath);
             string documentRaw = Encoding.UTF8.GetString(documentBytes.RemoveBOM());
 
-            // Prepare document by changing all non-valid characters to space
-            string document = documentRaw
-                .Select(x => char.IsWhiteSpace(x) || char.IsControl(x) || char.IsSymbol(x) || x > 122 ? ' ' : x)
-                .ToArray()
-                .AsSpan()
-                .ToString();
-
-            string[] tokens = document
-                .Split(_tokenParse, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => !_skipWords.Contains(x, StringComparer.OrdinalIgnoreCase))
-                .Where(x => x.Length > 1)
-                .ToArray();
-
-            IReadOnlyList<WordCount> wordCounts = tokens
-                .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .Select(x => new WordCount { Word = x.Key, Count = x.Count() })
-                .ToList();
-
-            return wordCounts;
+            return new ParseWord().Parse(documentRaw);
         }
     }
 }

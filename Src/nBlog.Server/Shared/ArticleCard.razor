@@ -5,7 +5,7 @@
 @using NBlog.Server.Application;
 @using nBlog.sdk.ArticlePackage.Extensions;
 
-<div class="card border-0 mb-3" style="width:100%">
+<div class="card article-card">
     <div class="row no-gutters">
         <div class="col-md-2 p-md-2">
             <img src="@ImageSrc" class="card-img" style="max-height: 250px;max-width:110px" />
@@ -65,7 +65,7 @@
         {
             if (Manifest.ImageFile.IsEmpty()) return string.Empty;
 
-            string extension = Path.GetExtension(Manifest.ImageFile).Remove(0);
+            string extension = Path.GetExtension(Manifest.ImageFile).Remove(0, 1);
             return $"data:image/{extension};base64, {GetIconImageBase64()}";
         }
     }

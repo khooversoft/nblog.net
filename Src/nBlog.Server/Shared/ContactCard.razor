@@ -1,0 +1,169 @@
+﻿@using NBlog.Server.Services;
+@using NBlog.Server.Application;
+@using Toolbox.Extensions;
+@using System.Net.Mail;
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="text-center">
+            <h3 class="mb-3 section-title">Contact</h3>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mb-md-2 mt-4">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-1 my-auto">
+                <span class="oi oi-envelope-closed"></span>
+            </div>
+            <div class="col-md-11">
+                <h4 class="m-0">Email:</h4>
+                <a href="mailto:kelvin.hoover@cloudconsulting.com">kelvin.hoover@cloudconsulting.com</a>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-1 my-auto">
+                <img src="/Images/LinkedIn.svg" style="width:20px" />
+            </div>
+            <div class="col-md-11">
+                <h4 class="m-0">LinkedIn:</h4>
+                <a href="www.linkedin.com/in/kelvin-hoover-khooversoft">kelvin.hoover@cloudconsulting.com</a>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-1 my-auto">
+                <img src="/Images/GitHub.svg" style="width:20px" />
+            </div>
+            <div class="col-md-11">
+                <h4 class="m-0">GitHub:</h4>
+                <a href="https://github.com/khooversoft">github.com/khooversoft</a>
+            </div>
+        </div>
+
+        @if (_messageSent)
+        {
+            <div class="row no-gutters h-25">
+                <div class="my-auto mx-auto">
+                    <h3 class="message-sent">Message Sent</h3>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-8 mb-5">
+        <form>
+            <div class="row">
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Your name (required)" @bind="_name" @oninput="@(x => OnUpdate(State.Name, x.Value?.ToString() ?? string.Empty))" />
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Your email (required)" @bind="_email" @oninput="@(x => OnUpdate(State.Email, x.Value?.ToString() ?? string.Empty))" @onfocusout="@TestEmail" />
+                    @if (_emailError)
+                    {
+                        <span class="small text-danger">Email address is invalid</span>
+                    }
+                    else
+                    {
+                        <span class="small">I will never share your email with anyone else.</span>
+                    }
+                </div>
+            </div>
+        </form>
+
+        <input type="text" class="col-md-12 mt-3 form-control" placeholder="Subject" @bind="_subject" @oninput="@(x => OnUpdate(State.Subject, x.Value?.ToString() ?? string.Empty))" />
+
+        <div class="mt-3 mb-3">
+            <input type="checkbox" @bind="_requestResume" @oninput="@(x => OnUpdate(State.RequestResume, x.Value?.ToString() ?? string.Empty))" /> Request Kelvin's resume
+        </div>
+
+        <textarea class="col-md-12 form-control mb-3" style="height:150px" placeholder="Message (required)" @bind="_message" @oninput="@(x => OnUpdate(State.Message, x.Value?.ToString() ?? string.Empty))" />
+
+        <button @onclick="SendMessage" class="btn btn-primary" disabled="@_isDisabled">Send Message</button>
+
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public DirectoryService DirectoryService { get; set; } = null!;
+
+    private enum State
+    {
+        Name,
+        Email,
+        Subject,
+        Message,
+        RequestResume,
+    }
+
+    private IReadOnlyList<Action<string>> _setValues = null!;
+
+    private bool _emailError;
+
+    private string? _name { get; set; }
+    private string? _email { get; set; }
+    private string? _subject { get; set; }
+    private string? _message { get; set; }
+    private bool _requestResume { get; set; }
+
+    private bool _messageSent { get; set; }
+    private bool _isDisabled { get; set; } = true;
+
+    protected override void OnParametersSet()
+    {
+        _setValues = new Action<string>[]
+        {
+            x => _name = x,
+            x => _email = x,
+            x => _subject = x,
+            x => _message = x,
+            x => _requestResume = bool.Parse(x),
+        }.ToArray();
+    }
+
+    private void OnUpdate(State state, string value)
+    {
+        _setValues[(int)state](value);
+
+        bool sendMessageEnable = !_name.IsEmpty() &&
+            !_email.IsEmpty() &&
+            (_requestResume || !_message.IsEmpty());
+
+        _isDisabled = !sendMessageEnable;
+
+        StateHasChanged();
+    }
+
+    private void TestEmail(EventArgs args)
+    {
+        try
+        {
+            _ = new MailAddress(_email!);
+
+            bool isEmailValid = _email!.IndexOf(';') < 0 &&
+                _email.IndexOf('.') > 0 &&
+                _email.LastIndexOf('.') > _email.IndexOf('@') &&
+                _email.LastIndexOf('.') + 1 < _email.Length;
+
+            _emailError = !isEmailValid;
+        }
+        catch
+        {
+            _emailError = true;
+        }
+
+        StateHasChanged();
+    }
+
+    private Task SendMessage(MouseEventArgs _)
+    {
+        _messageSent = true;
+        StateHasChanged();
+
+        return Task.CompletedTask;
+    }
+}
