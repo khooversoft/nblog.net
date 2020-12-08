@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.ArticlePackage.Extensions
+namespace nBlog.sdk.Extensions
 {
     public static class ArticlePayloadExtensions
     {

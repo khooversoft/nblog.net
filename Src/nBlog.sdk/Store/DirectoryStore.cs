@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using nBlog.sdk.ArticlePackage;
-using nBlog.sdk.ArticlePackage.Extensions;
+using nBlog.sdk.Extensions;
 using nBlog.sdk.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Azure.DataLake;

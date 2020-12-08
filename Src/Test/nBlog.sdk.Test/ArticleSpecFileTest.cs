@@ -17,8 +17,8 @@ namespace nBlog.sdk.Test
 
             ArticleSpec articleSpec = new ArticleSpecFile(specFile).Read();
 
-            articleSpec.PackageFile.Should().Be("articles.contact.articlePackage");
-            articleSpec.Manifest.ArticleId.Should().Be("articles/contact");
+            articleSpec.PackageFile.Should().Be("article.contact.articlePackage");
+            articleSpec.Manifest.ArticleId.Should().Be("article/contact");
             articleSpec.Manifest.Title.Should().Be("Contact");
             articleSpec.Manifest.Author.Should().Be("Ghost Writer");
             articleSpec.Manifest.Summary.Should().Be("Summary text");

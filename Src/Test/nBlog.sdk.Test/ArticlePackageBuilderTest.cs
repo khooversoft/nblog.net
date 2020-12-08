@@ -1,13 +1,12 @@
 using FluentAssertions;
 using nBlog.sdk.ArticlePackage;
-using nBlog.sdk.ArticlePackage.Extensions;
+using nBlog.sdk.Extensions;
 using nBlog.sdk.Model;
 using nBlog.sdk.Test.Application;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using Xunit;
 
 namespace nBlog.sdk.Test
@@ -23,13 +22,14 @@ namespace nBlog.sdk.Test
             string packageFile = new ArticlePackageBuilder()
                 .SetSpecFile(specFile)
                 .SetBuildFolder(buildFolder)
+                .SetObjFolder(Path.Combine(buildFolder, "obj"))
                 .Build();
 
             ArticlePackageDetails articlePackageDetails = new ArticlePackageExpander(packageFile).Expand();
 
             articlePackageDetails.Should().NotBeNull();
             articlePackageDetails.ArticleManifest.Should().NotBeNull();
-            articlePackageDetails.ArticleManifest.ArticleId.Should().Be("articles/contact");
+            articlePackageDetails.ArticleManifest.ArticleId.Should().Be("article/contact");
             articlePackageDetails.ArticleManifest.Title.Should().Be("Contact");
             articlePackageDetails.ArticleManifest.Author.Should().Be("Ghost Writer");
             articlePackageDetails.ArticleManifest.Date.Should().Be(new DateTime(2020, 1, 2));
@@ -59,6 +59,7 @@ namespace nBlog.sdk.Test
             string packageFile = new ArticlePackageBuilder()
                 .SetSpecFile(specFile)
                 .SetBuildFolder(buildFolder)
+                .SetObjFolder(Path.Combine(buildFolder, "obj"))
                 .Build();
 
             byte[] fileBytes = File.ReadAllBytes(packageFile);
@@ -68,7 +69,7 @@ namespace nBlog.sdk.Test
 
             articleManifest.Should().NotBeNull();
             articleManifest.Should().NotBeNull();
-            articleManifest.ArticleId.Should().Be("articles/contact");
+            articleManifest.ArticleId.Should().Be("article/contact");
             articleManifest.Title.Should().Be("Contact");
             articleManifest.Author.Should().Be("Ghost Writer");
             articleManifest.Date.Should().Be(new DateTime(2020, 1, 2));

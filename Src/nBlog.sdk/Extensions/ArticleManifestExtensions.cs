@@ -1,4 +1,5 @@
-﻿using nBlog.sdk.Model;
+﻿using nBlog.sdk.ArticlePackage;
+using nBlog.sdk.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using Toolbox.Tools;
 
-namespace nBlog.sdk.ArticlePackage.Extensions
+namespace nBlog.sdk.Extensions
 {
     public static class ArticleManifestExtensions
     {

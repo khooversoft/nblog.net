@@ -1,10 +1,7 @@
-﻿using nBlog.sdk.ArticlePackage;
-using nBlog.sdk.ArticlePackage.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Toolbox.Extensions;
 using Toolbox.Tools;
 
 namespace nBlog.sdk.Model
@@ -13,6 +10,8 @@ namespace nBlog.sdk.Model
     {
         public ArticleId(string id)
         {
+            id.VerifyNotEmpty(id);
+
             Id = id.ToLower();
             VerifyId();
         }
@@ -37,9 +36,8 @@ namespace nBlog.sdk.Model
 
         public static ArticleId FromBase64(string base64) => new ArticleId(Encoding.UTF8.GetString(Convert.FromBase64String(base64)));
 
-        public void VerifyId()
+        private void VerifyId()
         {
-            Id.VerifyNotEmpty(nameof(Id));
             Id.VerifyAssert(x => char.IsLetter(x[0]), "Must start with letter");
             Id.VerifyAssert(x => char.IsLetterOrDigit(x[^1]), "Must end with letter or number");
             Id.VerifyAssert(x => x.All(y => char.IsLetterOrDigit(y) || y == '.' || y == '/' || y == '-'), "Valid Id must be letter, number, '.', '/', or '-'");

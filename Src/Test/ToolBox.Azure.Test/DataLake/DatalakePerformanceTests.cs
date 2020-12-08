@@ -46,7 +46,12 @@ namespace ToolBox.Azure.Test.DataLake
                 .Select(x => RunPartition(x, tokenSource.Token))
                 .ToArray();
 
-            await Task.WhenAll(tasks);
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch (OperationCanceledException) { }
+
             sw.Stop();
 
             _output.WriteLine($"Total count={_totalCount}, MS={sw.ElapsedMilliseconds}, Sec={sw.Elapsed.TotalSeconds}, TPS / {_totalCount / sw.Elapsed.TotalSeconds}");

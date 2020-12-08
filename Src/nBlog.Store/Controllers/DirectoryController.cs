@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using nBlog.sdk.Actors.Directory;
-using nBlog.sdk.ArticlePackage.Extensions;
+using nBlog.sdk.Extensions;
 using nBlog.sdk.Model;
 using System.Threading.Tasks;
 

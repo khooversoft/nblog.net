@@ -27,6 +27,8 @@ namespace nBlog.Store.Test.Application
 
         public IDirectoryClient DirectoryClient => new DirectoryClient(Client, Resolve<ILoggerFactory>().CreateLogger<DirectoryClient>());
 
+        public IContactRequestClient ContactRequestClient => new ContactRequestClient(Client, Resolve<ILoggerFactory>().CreateLogger<ContactRequestClient>());
+
         public TestWebsiteHost StartApiServer()
         {
             Option option = GetOption();
@@ -38,7 +40,11 @@ namespace nBlog.Store.Test.Application
                         .UseTestServer()
                         .UseStartup<Startup>();
                 })
-                .ConfigureLogging(builder => builder.AddDebug())
+                .ConfigureLogging(builder =>
+                {
+                    builder.AddDebug();
+                    builder.AddFilter(x => true);
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton(option);

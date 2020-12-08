@@ -1,9 +1,58 @@
 ﻿@page "/about-me"
 
-<div class="row mt-5 mb-5 h-100">
+
+<div id="header" class="d-flex flex-column justify-content-center">
+    <nav>
+        <ul>
+            <li>
+                <AnchorLink href="#home" class="flex-button d-flex justify-content-center align-items-center">
+                    <i class="oi oi-home icon"></i>
+                </AnchorLink>
+            </li>
+            <li>
+                <AnchorLink href="#experience" class="flex-button d-flex justify-content-center align-items-center">
+                    <i class="oi oi-person"></i>
+                </AnchorLink>
+            </li>
+            <li>
+                <AnchorLink href="#resume" class="flex-button d-flex justify-content-center align-items-center">
+                    <i class="oi oi-document"></i>
+                </AnchorLink>
+            </li>
+            <li>
+                <AnchorLink href="#contact" class="flex-button d-flex justify-content-center align-items-center">
+                    <i class="oi oi-envelope-closed"></i>
+                </AnchorLink>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div id="home" class="row mt-5 mb-5 h-100">
     <div class="col-md-4 my-auto">
-        <h2>Kelvin Hoover</h2>
-        I'm <TypeWriter Subjects="@_titles" />
+        <div>
+            <h2>Kelvin Hoover</h2>
+            I'm <TypeWriter Subjects="@_titles" />
+        </div>
+        <div class="nav-icons-list">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="mailto:kelvin.hoover@cloudconsulting.com">
+                        <span class="oi oi-envelope-closed"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://www.linkedin.com/in/kelvin-hoover-khooversoft" target="_blank">
+                        <img src="/Images/LinkedIn.svg" style="width:20px" />
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/khooversoft" target="_blank">
+                        <img src="/Images/GitHub.svg" style="width:20px" />
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="col-md-8">
@@ -26,7 +75,7 @@
 
 <hr />
 
-<div class="row experience-section mt-5">
+<div id="experience" class="row experience-section mt-5">
     <div class="col-md-12 mt-3 mb-5">
         <div class="text-center">
             <h2 class="mb-3 section-title">My Experience</h2>
@@ -44,8 +93,8 @@
                     <li>18+ years Microsoft product groups</li>
                     <li>10+ years Development Lead</li>
                     <li>10+ years Development Manager</li>
-                    <li>8 years Group Program Manager / Technical Leader</li>
-                    <li>20+ years Architect</li>
+                    <li>8 years Group Program Manager</li>
+                    <li>20+ years Architect / Technical Leader</li>
                 </ul>
             </div>
 
@@ -54,8 +103,8 @@
                 <ul>
                     <li>12+ years Microsoft Azure</li>
                     <li>1 year Amazon AWS</li>
-                    <li>3+ years Containers</li>
-                    <li>10+ years Big Data Analytics (ADLA/ADLS, DataBricks, Cosmos)</li>
+                    <li>3+ years Containers / Kubernetes / Docker</li>
+                    <li>10+ years Big Data Analytics (Databricks, Spark, ADLA/ADLS, Cosmos)</li>
                     <li>20+ years Full Stack / API Services</li>
                     <li>20+ years SQL / NoSql / DFS</li>
                     <li>10+ years Distributed Actors</li>
@@ -93,8 +142,154 @@
     </div>
 </div>
 
-<div class="mt-5">
-    <ContactCard />
+<div id="resume" class="row resume-section mt-5">
+    <div class="col-md-12 mt-3 mb-5">
+        <div class="text-center">
+            <h2 class="mb-3 section-title">Resume</h2>
+        </div>
+    </div>
+
+    <div class="row col-md-12 no-gutters">
+        <div class="col-md-6">
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Premera Blue Cross</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Oct 2019 - Present</span>
+                </div>
+                <ul>
+                    <li>Developed AI / Machine Learning as a Service</li>
+                    <li>Machine Learning with Databricks / Spark</li>
+                    <li>Developed Premera's big data environments &amp; workflows</li>
+                    <li>Developed Bots to Extend Microsoft HealthBot</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Bing / AI</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Apr 2018 - Aug 2019</span>
+                </div>
+                <ul>
+                    <li>Developed Scope big data language optimization for 25% increase in performance</li>
+                    <li>Extended VS support for Scope for developer first models</li>
+                    <li>Developed large scale build data pipelines reducing schedules by 40%</li>
+                    <li>Developed self service site for Scope optimization for all Bing teams</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Lowe's</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Jun 2017 - Apr 2018</span>
+                </div>
+                <ul>
+                    <li>Enabled big data processing with Databricks</li>
+                    <li>Designed and certified PCI Compliant &amp; Data Security Standards for Azure Cloud environments</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Remix3d.com</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Feb 2016 - Jun 2017</span>
+                </div>
+                <ul>
+                    <li>Developed front end for all 3D catalog API services</li>
+                    <li>Developed global fail over with Azure Service Fabric Actors</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">520 Software</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Jun 2015 - Feb 2016</span>
+                </div>
+                <ul>
+                    <li>Developed credit card and ETF transaction API services</li>
+                    <li>Leveraged Microsoft Orleans Actor system for performance and fault tolerance</li>
+                    <li>Lead developer full stack developer on Web UI for services</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Universal Store</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Apr 2014 - Jun 2015</span>
+                </div>
+                <ul>
+                    <li>Lead developer for Microsoft Licensing AVS (Activation and Validation Services)</li>
+                    <li>Primary lead for One Store entitlements and licensing cloud services</li>
+                    <li>Lead developer for prototype effort for automating global large scale deployment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Windows Telemetry</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Nov 2011 - Apr 2014</span>
+                </div>
+                <ul>
+                    <li>Development lead for UX design of new internal big data access to AVS and Watson data</li>
+                    <li>Lead developer full stack developer on Web UI for services</li>
+                    <li>Responsible for 100% improvement of transaction performance for License services</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft GISV</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Jun 2006 - Oct 2011</span>
+                </div>
+                <ul>
+                    <li>Development lead &amp; manager for over 10 external Microsoft web properties</li>
+                    <li>Developed innovated media visualization services and UI that appeared in Bill Gates demo</li>
+                    <li>Managed 3 development teams</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft ISV Consulting</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">May 2005 - Jun 2006</span>
+                </div>
+                <ul>
+                    <li>Enabled top Microsoft ISV key flagship products on Microsoft Cloud platform</li>
+                    <li>Constructed cloud business plans with reviews with Microsoft top ISVs CIO &amp; VP</li>
+                    <li>Designed and help build next generation of Microsoft financial trade platform</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Common Language Runtime</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Feb 2003 - May 2005</span>
+                </div>
+                <ul>
+                    <li>Responsible for runtime JIT compilers</li>
+                    <li>Lead program manager for CLR common specifications with ECMA</li>
+                    <li>Responsible for CLR integration with Windows OS</li>
+                </ul>
+            </div>
+
+            <div class="col-md-12 resume-block">
+                <h5 class="resume-title">Microsoft Windows Embedded</h5>
+                <div class="resume-year">
+                    <span class="resume-year-title">Dec 2000 - Jan 2003</span>
+                </div>
+                <ul>
+                    <li>Responsible for the C++/Assembly compilers for all embedded chips</li>
+                    <li>Managed development for all compilers for all embedded chips</li>
+                    <li>Development lead for integrating embedded debug tools into Visual Studio</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="contact" class="mt-5">
+    <ContactCard ShowRequestForResume="true" />
 </div>
 
 

@@ -1,13 +1,8 @@
 ﻿using FluentAssertions;
-using nBlog.sdk.ArticlePackage;
-using nBlog.sdk.ArticlePackage.Extensions;
 using nBlog.sdk.Model;
 using nBlog.Store.Test.Application;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,7 +11,7 @@ namespace nBlog.Store.Test
     public class DirectoryControllerTests
     {
         [Fact]
-        public async Task GivenFakePackage_WhenFullLifeCycle_ShouldPass()
+        public async Task GivenArticleManifest_WhenFullLifeCycle_ShouldPass()
         {
             TestWebsiteHost host = TestApplication.GetHost();
 

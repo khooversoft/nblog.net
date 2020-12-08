@@ -1,10 +1,9 @@
 ﻿using FluentAssertions;
 using nBlog.sdk.ArticlePackage;
-using nBlog.sdk.ArticlePackage.Extensions;
+using nBlog.sdk.Extensions;
 using nBlog.sdk.Model;
 using nBlog.Store.Test.Application;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -59,6 +58,7 @@ namespace nBlog.Store.Test
             string packageFile = new ArticlePackageBuilder()
                 .SetSpecFile(specFile)
                 .SetBuildFolder(buildFolder)
+                .SetObjFolder(Path.Combine(buildFolder, "obj"))
                 .Build();
 
             byte[] packageBytes = File.ReadAllBytes(packageFile);
@@ -85,7 +85,6 @@ namespace nBlog.Store.Test
 
             BatchSet<string> searchList = await host.ArticleClient.List(QueryParameters.Default).ReadNext();
             searchList.Should().NotBeNull();
-
 
             searchList.Records.Any(x => x.StartsWith(articlePayload.Id)).Should().BeTrue();
 

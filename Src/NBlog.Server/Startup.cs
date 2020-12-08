@@ -41,6 +41,12 @@ namespace NBlog.Server
                 Option option = service.GetRequiredService<Option>();
                 httpClient.BaseAddress = new Uri(option.BlogStoreUrl);
             });
+
+            services.AddHttpClient<IContactRequestClient, ContactRequestClient>((service, httpClient) =>
+            {
+                Option option = service.GetRequiredService<Option>();
+                httpClient.BaseAddress = new Uri(option.BlogStoreUrl);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

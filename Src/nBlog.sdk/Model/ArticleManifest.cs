@@ -8,13 +8,13 @@ namespace nBlog.sdk.Model
 {
     public record ArticleManifest
     {
-        private string _articleId = null!;
+        //private string _articleId = null!;
 
-        public string ArticleId
-        {
-            get => _articleId;
-            init => _articleId = new ArticleId(value).Id;
-        }
+        public string ArticleId { get; init; } = null!;
+        //{
+        //    get => _articleId;
+        //    init => _articleId = value.ToLower();
+        //}
 
         public string PackageVersion { get; init; } = "1.0.0.0";
 

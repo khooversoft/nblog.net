@@ -26,7 +26,7 @@ namespace nBlog.sdk.ArticlePackage
 
             IReadOnlyList<WordCount> lineWordCounts = new ParseWord().Parse(line);
 
-            var flattenDirectory = _articleDirectory.Indexes
+            var flattenDirectory = (_articleDirectory.Indexes ?? Array.Empty<ArticleIndex>())
                 .SelectMany(x => x.WordIndexes, (o, i) => (id: o.ArticleId, wordCount: i))
                 .ToList();
 

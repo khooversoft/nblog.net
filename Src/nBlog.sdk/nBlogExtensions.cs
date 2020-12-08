@@ -40,6 +40,7 @@ namespace nBlog.sdk
 
             services.AddSingleton<IArticleStore, ArticleStore>();
             services.AddSingleton<IDirectoryStore, DirectoryStore>();
+            services.AddSingleton<IContactRequestStore, ContactRequestStore>();
 
             return services;
         }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using Toolbox.Tools;
+﻿using nBlog.sdk.ArticlePackage;
+using System;
 
-namespace nBlog.sdk.ArticlePackage.Extensions
+namespace nBlog.sdk.Extensions
 {
     public static class ArticleAreaExtensions
     {
@@ -10,7 +9,7 @@ namespace nBlog.sdk.ArticlePackage.Extensions
         {
             ArticleArea? articleArea = subject.ToArticleAreaOrDefault();
 
-            if( articleArea == null) throw new ArgumentException($"Invalid area {subject}");
+            if (articleArea == null) throw new ArgumentException($"Invalid area {subject}");
             return articleArea.Value;
         }
 

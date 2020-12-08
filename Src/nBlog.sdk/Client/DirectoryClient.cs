@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using nBlog.sdk.Model;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Tools;
@@ -59,7 +61,8 @@ namespace nBlog.sdk.Client
             articleDirectory.VerifyNotNull(nameof(articleDirectory));
 
             _logger.LogTrace($"{nameof(Set)}");
-            await _httpClient.PostAsJsonAsync("api/directory", articleDirectory, token);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/directory", articleDirectory, token);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

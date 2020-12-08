@@ -23,6 +23,7 @@ namespace nBlog.sdk.Test
             string packageFile = new ArticlePackageBuilder()
                 .SetSpecFile(specFile)
                 .SetBuildFolder(buildFolder)
+                .SetObjFolder(Path.Combine(buildFolder, "obj"))
                 .Build();
 
             IReadOnlyList<WordCount> wordCounts = new ArticlePackageIndexBuilder().Build(packageFile);
@@ -31,10 +32,10 @@ namespace nBlog.sdk.Test
 
             var list = new[]
             {
+                new WordCount { Word = "#nblog", Count = 1 },
                 new WordCount { Word = "Contact", Count = 2 },
-                new WordCount { Word = "domain", Count = 1 },
                 new WordCount { Word = "Email", Count = 1 },
-                new WordCount { Word = "nBlog", Count = 2 },
+                new WordCount { Word = "nBlog@domain", Count = 1 },
                 new WordCount { Word = "net", Count = 1 },
                 new WordCount { Word = "Please", Count = 1 },
                 new WordCount { Word = "Twitter", Count = 1 },
