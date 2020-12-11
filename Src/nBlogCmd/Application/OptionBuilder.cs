@@ -60,8 +60,9 @@ namespace nBlogCmd.Application
                 break;
             }
 
-            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
             option.Verify();
+            option = option with { SecretFilter = new SecretFilter(new[] { option.BlogStoreOption.ApiKey }) };
+            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
 
             return option;
         }

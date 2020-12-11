@@ -23,7 +23,6 @@ namespace NBlog.Server.Application
         public static class ArticleIds
         {
             public static ArticleId AboutMe { get; } = new ArticleId("site/about-me");
-            public static ArticleId Customers { get; } = new ArticleId("site/customers");
             public static ArticleId LandingPage { get; } = new ArticleId("site/landing-page");
         }
     }

@@ -17,7 +17,7 @@
     },
     "NBlog.Server": {
       "commandName": "Project",
-      "commandLineArgs": "environment=local",
+      "commandLineArgs": "environment=prod",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

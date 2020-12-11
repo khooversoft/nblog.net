@@ -19,5 +19,9 @@ namespace nBlog.Store.Application
         public DataLakeStoreOption Store { get; init; } = null!;
 
         public string? ApplicationUrl { get; init; }
+
+        public string ApiKey { get; init; } = null!;
+
+        public string? InstrumentationKey { get; set; }
     }
 }

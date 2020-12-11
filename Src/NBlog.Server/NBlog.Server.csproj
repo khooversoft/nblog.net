@@ -8,14 +8,17 @@
 
   <ItemGroup>
     <Content Remove="Configs\local-config.json" />
+    <Content Remove="Configs\prod-config.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Configs\prod-config.json" />
     <EmbeddedResource Include="Configs\local-config.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.21.0" />
+    <PackageReference Include="Markdig" Version="0.22.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
   </ItemGroup>
 
   <ItemGroup>

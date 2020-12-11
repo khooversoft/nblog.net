@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Toolbox.Azure.DataLake.Model;
 using Toolbox.Extensions;
 using Toolbox.Model;
@@ -18,6 +17,8 @@ namespace nBlog.Store.Application
             x => x.Environment.ToEnvironment(),
 
             x => x.Store.Verify(),
+
+            x => x.ApiKey.VerifyNotEmpty($"{nameof(x.ApiKey)} is required"),
         };
 
         public static void Verify(this Option option)

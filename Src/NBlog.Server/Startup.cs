@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using nBlog.sdk.Client;
+using nBlog.sdk.Store;
 using NBlog.Server.Application;
 using NBlog.Server.Services;
 using System;
+using System.Net.Http;
 
 namespace NBlog.Server
 {
@@ -30,23 +32,17 @@ namespace NBlog.Server
             services.AddSingleton<DirectoryService>();
             services.AddSingleton<ArticleService>();
 
-            services.AddHttpClient<IDirectoryClient, DirectoryClient>((service, httpClient) =>
-            {
-                Option option = service.GetRequiredService<Option>();
-                httpClient.BaseAddress = new Uri(option.BlogStoreUrl);
-            });
+            services.AddHttpClient<IDirectoryClient, DirectoryClient>((service, httpClient) => setBlogStoreOptions(service, httpClient));
+            services.AddHttpClient<IArticleClient, ArticleClient>((service, httpClient) => setBlogStoreOptions(service, httpClient));
+            services.AddHttpClient<IContactRequestClient, ContactRequestClient>((service, httpClient) => setBlogStoreOptions(service, httpClient));
 
-            services.AddHttpClient<IArticleClient, ArticleClient>((service, httpClient) =>
-            {
-                Option option = service.GetRequiredService<Option>();
-                httpClient.BaseAddress = new Uri(option.BlogStoreUrl);
-            });
 
-            services.AddHttpClient<IContactRequestClient, ContactRequestClient>((service, httpClient) =>
+            void setBlogStoreOptions(IServiceProvider service, HttpClient httpClient)
             {
                 Option option = service.GetRequiredService<Option>();
-                httpClient.BaseAddress = new Uri(option.BlogStoreUrl);
-            });
+                httpClient.BaseAddress = new Uri(option.BlogStoreOption.StoreUrl);
+                httpClient.DefaultRequestHeaders.Add(StoreConstants.ApiKeyName, option.BlogStoreOption.ApiKey);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

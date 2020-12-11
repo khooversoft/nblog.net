@@ -8,9 +8,13 @@ namespace NBlog.Server.Application
     {
         public string? SecretId { get; init; }
 
-        public string BlogStoreUrl { get; init; } = null!;
+        public BlogStoreOption BlogStoreOption { get; init; } = null!;
 
         public string Environment { get; init; } = null!;
         public RunEnvironment RunEnvironment { get; init; }
+
+        public string? InstrumentationKey { get; init; }
+
+        public ISecretFilter SecretFilter { get; init; } = null!;
     }
 }

@@ -8,16 +8,19 @@
 
   <ItemGroup>
     <Content Remove="Configs\local-config.json" />
+    <Content Remove="Configs\prod-config.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Configs\prod-config.json" />
     <EmbeddedResource Include="Configs\local-config.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.9.4" />

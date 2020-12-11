@@ -38,6 +38,7 @@ namespace nBlogCmd.Application
                         .SetBasePath(Directory.GetCurrentDirectory())
                         .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
                         .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
+                        .AddEnvironmentVariables("APPSETTING_")
                         .AddCommandLine(Args ?? Array.Empty<string>())
                         .Build()
                         .Bind<Option>();
@@ -56,8 +57,9 @@ namespace nBlogCmd.Application
                 break;
             }
 
-            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
             option.Verify();
+            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
+            option = option with { SecretFilter = new SecretFilter(new[] { option.BlogStoreOption.ApiKey }) };
 
             return option;
         }

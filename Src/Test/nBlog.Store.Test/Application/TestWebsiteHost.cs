@@ -4,10 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using nBlog.sdk.Client;
+using nBlog.sdk.Store;
 using nBlog.Store.Application;
 using System;
 using System.Net.Http;
 using System.Threading;
+using Toolbox.Extensions;
 
 namespace nBlog.Store.Test.Application
 {
@@ -52,7 +54,9 @@ namespace nBlog.Store.Test.Application
                 });
 
             _host = host.Start();
+
             _client = _host.GetTestServer().CreateClient();
+            _client.DefaultRequestHeaders.Add(StoreConstants.ApiKeyName, option.ApiKey);
             return this;
         }
 

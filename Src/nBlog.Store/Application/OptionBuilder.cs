@@ -49,6 +49,7 @@ namespace nBlog.Store.Application
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
                     .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
+                    .AddEnvironmentVariables("APPSETTING_")
                     .AddCommandLine(args ?? Array.Empty<string>())
                     .Build()
                     .Bind<Option>();
@@ -68,7 +69,8 @@ namespace nBlog.Store.Application
             };
 
             option.Verify();
-            option = option with { SecretFilter = new SecretFilter(new[] { option.Store.AccountKey }), RunEnvironment = option.Environment.ToEnvironment() };
+            option = option with { SecretFilter = new SecretFilter(new[] { option.Store.AccountKey, option.ApiKey }) };
+            option = option with { RunEnvironment = option.Environment.ToEnvironment() };
 
             return option;
         }

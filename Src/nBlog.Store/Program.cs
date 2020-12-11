@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using nBlog.Store.Application;
 using nBlog.Store.Services;
+using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Logging;
@@ -34,6 +36,11 @@ namespace nBlog.Store
                     services.AddSingleton(option);
                     services.AddSingleton(option.Store);
                     services.AddSingleton(telemetryBuffer);
+
+                    if (!option.InstrumentationKey.IsEmpty())
+                    {
+                        services.AddApplicationInsightsTelemetry(option.InstrumentationKey);
+                    }
                 })
                 .ConfigureLogging(config =>
                 {
@@ -42,6 +49,11 @@ namespace nBlog.Store
                     config.AddFilter(x => true);
 
                     config.AddProvider(new TargetBlockLoggerProvider(telemetryBuffer.TargetBlock));
+
+                    if (!option.InstrumentationKey.IsEmpty())
+                    {
+                        config.AddApplicationInsights(option.InstrumentationKey);
+                    }
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

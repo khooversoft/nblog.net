@@ -32,7 +32,8 @@ namespace nBlogCmd.Application
             {
                 if( !x.Upload ) return;
 
-                x.BlogStoreUrl.VerifyNotEmpty($"{nameof(x.BlogStoreUrl)} is required for upload");
+                x.BlogStoreOption.StoreUrl.VerifyNotEmpty($"{nameof(x.BlogStoreOption)}:{nameof(x.BlogStoreOption.StoreUrl)} is required for upload");
+                x.BlogStoreOption.ApiKey.VerifyNotEmpty($"{nameof(x.BlogStoreOption)}:{nameof(x.BlogStoreOption.ApiKey)} is required for upload");
             },
         };
 

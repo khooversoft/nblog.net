@@ -7,6 +7,6 @@
   "BuildFolder": "D:\\Work\\nBlogBuild",
 
   "BlogStoreOption": {
-    "StoreUrl": "http://localhost:5010"
+    "StoreUrl": "https://prod-nblogstore.azurewebsites.net"
   }
 }

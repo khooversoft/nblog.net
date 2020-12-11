@@ -43,7 +43,7 @@ namespace nBlogCmd.Application
             string line = option.GetConfigValues()
                 .Prepend(new string('=', maxWidth))
                 .Prepend("Current configurations")
-                .Aggregate(string.Empty, (a, x) => a += x + Environment.NewLine);
+                .Aggregate(string.Empty, (a, x) => a += option.SecretFilter.FilterSecrets(x) + Environment.NewLine);
 
             logger.LogInformation(line);
         }

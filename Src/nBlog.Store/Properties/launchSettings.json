@@ -13,6 +13,8 @@
       "commandName": "IISExpress",
       "launchUrl": "weatherforecast",
       "environmentVariables": {
+        "APPSETTING_Store__AccountKey": "<accountkeyvalue>",
+        "APPSETTING_Environment": "prod",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

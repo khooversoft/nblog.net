@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using nBlog.sdk;
 using nBlog.sdk.Store;
 using nBlog.Store.Application;
+using nBlog.Store.Middleware;
 using NSwag;
 using System;
 using Toolbox.Azure.DataLake;
@@ -47,6 +48,7 @@ namespace nBlog.Store
                 };
             });
 
+            // CORS
             services.AddCors(x => x.AddPolicy(_policyName, builder =>
             {
                 builder
@@ -74,6 +76,7 @@ namespace nBlog.Store
             app.UseRouting();
             app.UseCors(_policyName);
             app.UseAuthorization();
+            app.UseMiddleware<ApiKeyMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

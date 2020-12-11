@@ -1,5 +1,7 @@
 ﻿{
   "SecretId": "NBlog.Server",
 
-  "BlogStoreUrl": "http://localhost:5010"
+  "BlogStoreOption": {
+    "StoreUrl": "http://localhost:5010"
+  }
 }

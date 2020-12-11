@@ -1,4 +1,5 @@
-﻿using NBlog.Server.Application;
+﻿using Microsoft.Extensions.Logging;
+using NBlog.Server.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,9 @@ namespace nBlogCmd.Application
         private static IList<Action<Option>> verifications = new List<Action<Option>>
         {
             x => x.Environment.ToEnvironment(),
-            x => x.BlogStoreUrl.VerifyNotEmpty($"{nameof(x.BlogStoreUrl)} is required for upload"),
+
+            x => x.BlogStoreOption?.StoreUrl?.VerifyNotEmpty($"{nameof(x.BlogStoreOption.StoreUrl)} is required for upload"),
+            x => x.BlogStoreOption?.ApiKey?.VerifyNotEmpty($"{nameof(x.BlogStoreOption.ApiKey)} is required for upload"),
         };
 
         public static void Verify(this Option option)
@@ -37,5 +40,17 @@ namespace nBlogCmd.Application
 
             _ => throw new InvalidOperationException(),
         };
+
+        public static void DumpConfigurations(this Option option, ILogger logger)
+        {
+            const int maxWidth = 80;
+
+            string line = option.GetConfigValues()
+                .Prepend(new string('=', maxWidth))
+                .Prepend("Current configurations")
+                .Aggregate(string.Empty, (a, x) => a += option.SecretFilter.FilterSecrets(x) + Environment.NewLine);
+
+            logger.LogInformation(line);
+        }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using nBlog.sdk.Client;
+using nBlog.sdk.Store;
 using nBlogCmd.Activities;
 using nBlogCmd.Application;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -120,10 +122,16 @@ namespace nBlogCmd
             service.AddSingleton<UploadArticlesActivity>();
             service.AddSingleton<UploadDirectoryActivity>();
 
-            service.AddHttpClient<IArticleClient, ArticleClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
-            service.AddHttpClient<IDirectoryClient, DirectoryClient>(x => x.BaseAddress = new Uri(option.BlogStoreUrl));
+            service.AddHttpClient<IArticleClient, ArticleClient>(setupHttpClient);
+            service.AddHttpClient<IDirectoryClient, DirectoryClient>(setupHttpClient);
 
             return service.BuildServiceProvider();
+
+            void setupHttpClient(HttpClient httpClient)
+            {
+                httpClient.BaseAddress = new Uri(option.BlogStoreOption.StoreUrl);
+                httpClient.DefaultRequestHeaders.Add(StoreConstants.ApiKeyName, option.BlogStoreOption.ApiKey);
+            }
         }
     }
 }
