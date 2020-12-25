@@ -1,6 +1,6 @@
 ﻿{
   "SecretId": "nBlogCmd",
-  "ApplicationUrl": "http://localhost:5010",
+  //"ApplicationUrl": "http://localhost:5010",
 
   "Store": {
     "AccountName": "devnblogstorage",

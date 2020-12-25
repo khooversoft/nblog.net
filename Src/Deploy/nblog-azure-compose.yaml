@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  nblog-server:
+    image: prodnblogreg.azurecr.io/nblog-server-image:v1
+    domainname: nblog-test
+    ports:
+      - "80:80"
+    depends_on:
+      - nblog-store
+    environment:
+      APPSETTING_Store__Url: "http://localhost:5011"
+
+  nblog-store:
+    image: prodnblogreg.azurecr.io/nblog-store-image:v1
+    ports:
+      - "5011:5011"
+    environment:
+      APPSETTING_ApplicationUrl: "http://localhost:5011"

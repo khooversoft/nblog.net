@@ -27,6 +27,7 @@ namespace NBlog.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddHealthChecks();
 
             services.AddSingleton<StateCacheService>();
             services.AddSingleton<DirectoryService>();
@@ -37,11 +38,12 @@ namespace NBlog.Server
             services.AddHttpClient<IContactRequestClient, ContactRequestClient>((service, httpClient) => setBlogStoreOptions(service, httpClient));
 
 
+
             void setBlogStoreOptions(IServiceProvider service, HttpClient httpClient)
             {
                 Option option = service.GetRequiredService<Option>();
-                httpClient.BaseAddress = new Uri(option.BlogStoreOption.StoreUrl);
-                httpClient.DefaultRequestHeaders.Add(StoreConstants.ApiKeyName, option.BlogStoreOption.ApiKey);
+                httpClient.BaseAddress = new Uri(option.Store.Url);
+                httpClient.DefaultRequestHeaders.Add(StoreConstants.ApiKeyName, option.Store.ApiKey);
             }
         }
 
@@ -59,13 +61,14 @@ namespace NBlog.Server
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

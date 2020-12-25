@@ -4,6 +4,6 @@
     {
         public string ApiKey { get; init; } = null!;
 
-        public string StoreUrl { get; init; } = null!;
+        public string Url { get; init; } = null!;
     }
 }

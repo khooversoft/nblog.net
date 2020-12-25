@@ -3,8 +3,7 @@ using NBlog.Server.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using Toolbox.Extensions;
 using Toolbox.Model;
 using Toolbox.Tools;
@@ -19,8 +18,10 @@ namespace nBlogCmd.Application
         {
             x => x.Environment.ToEnvironment(),
 
-            x => x.BlogStoreOption?.StoreUrl?.VerifyNotEmpty($"{nameof(x.BlogStoreOption.StoreUrl)} is required for upload"),
-            x => x.BlogStoreOption?.ApiKey?.VerifyNotEmpty($"{nameof(x.BlogStoreOption.ApiKey)} is required for upload"),
+            x => x.Store.VerifyNotNull("Store is required"),
+
+            x => x.Store.Url.VerifyNotEmpty($"{nameof(x.Store.Url)} is required"),
+            x => x.Store.ApiKey.VerifyNotEmpty($"{nameof(x.Store.ApiKey)} is required"),
         };
 
         public static void Verify(this Option option)
@@ -47,7 +48,7 @@ namespace nBlogCmd.Application
 
             string line = option.GetConfigValues()
                 .Prepend(new string('=', maxWidth))
-                .Prepend("Current configurations")
+                .Prepend($"Current configurations - Version {Assembly.GetExecutingAssembly().GetName().Version}")
                 .Aggregate(string.Empty, (a, x) => a += option.SecretFilter.FilterSecrets(x) + Environment.NewLine);
 
             logger.LogInformation(line);

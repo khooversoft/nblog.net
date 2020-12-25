@@ -35,13 +35,13 @@ namespace nBlogCmd.Application
             while (true)
             {
                 option = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
-                        .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
-                        .AddEnvironmentVariables("APPSETTING_")
-                        .AddCommandLine(Args ?? Array.Empty<string>())
-                        .Build()
-                        .Bind<Option>();
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .Func(x => GetEnvironmentConfig(environment) switch { Stream v => x.AddJsonStream(v), _ => x })
+                    .Func(x => secretId.ToNullIfEmpty() switch { string v => x.AddUserSecrets(v), _ => x })
+                    .AddEnvironmentVariables("APPSETTING_")
+                    .AddCommandLine(Args ?? Array.Empty<string>())
+                    .Build()
+                    .Bind<Option>();
 
                 switch (option)
                 {
@@ -59,7 +59,7 @@ namespace nBlogCmd.Application
 
             option.Verify();
             option = option with { RunEnvironment = option.Environment.ToEnvironment() };
-            option = option with { SecretFilter = new SecretFilter(new[] { option.BlogStoreOption.ApiKey }) };
+            option = option with { SecretFilter = new SecretFilter(new[] { option.Store.ApiKey }) };
 
             return option;
         }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Toolbox.Azure.DataLake.Model;
 using Toolbox.Extensions;
 using Toolbox.Model;
@@ -39,10 +41,16 @@ namespace nBlog.Store.Application
             _ => throw new InvalidOperationException(),
         };
 
-        public static string GetOptions(this Option option)
+        public static void DumpConfigurations(this Option option, ILogger logger)
         {
-            return option.GetConfigValues()
+            const int maxWidth = 80;
+
+            string line = option.GetConfigValues()
+                .Prepend(new string('=', maxWidth))
+                .Prepend($"Current configurations - Version {Assembly.GetExecutingAssembly().GetName().Version}")
                 .Aggregate(string.Empty, (a, x) => a += option.SecretFilter.FilterSecrets(x) + Environment.NewLine);
+
+            logger.LogInformation(line);
         }
     }
 }

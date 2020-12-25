@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  nblog-server:
+    image: nblog-server-image
+    ports:
+      - "5010:80"
+    depends_on:
+      - nblog-store
+    environment:
+      APPSETTING_Store__Url: "http://nblog-store"
+
+  nblog-store:
+    image: nblog-store-image
+    ports:
+      - "5011:80"

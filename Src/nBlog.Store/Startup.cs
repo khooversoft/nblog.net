@@ -60,18 +60,14 @@ namespace nBlog.Store
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Option option)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            ILogger<Startup> logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
-
-            logger.LogInformation(option.GetOptions());
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors(_policyName);

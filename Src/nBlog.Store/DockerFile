@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+WORKDIR /app
+
+EXPOSE 80
+
+ENV APPSETTING_Environment=local
+ENV APPSETTING_Store__AccountKey=3nYIx/QYwzA8A63JuY7l86TdB2qNlwtEBKqMVVnQonjpFSyMttDwEIhQk2F6sMq2n71MiAetIcm4T3BeTKJ9Hg==
+ENV APPSETTING_ApiKey=6CF9530D-CAEA-4A43-A448-7A7936908F45
+
+COPY bin/Release/net5.0/linux-x64/publish .
+ENTRYPOINT ["dotnet", "nBlog.Store.dll"]

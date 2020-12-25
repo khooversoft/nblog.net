@@ -1,17 +1,10 @@
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using NBlog.Server.Application;
 using nBlogCmd.Application;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Toolbox.Extensions;
 
 namespace NBlog.Server
@@ -24,9 +17,12 @@ namespace NBlog.Server
                 .SetArgs(args)
                 .Build();
 
-            CreateHostBuilder(args, option)
-                .Build()
-                .Run();
+            IHost host = CreateHostBuilder(args, option).Build();
+
+            ILogger<Program> logger = host.Services.GetRequiredService<ILogger<Program>>();
+            option.DumpConfigurations(logger);
+
+            host.Run();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args, Option option) =>
@@ -46,8 +42,11 @@ namespace NBlog.Server
                     config.AddDebug();
                     config.AddFilter(x => true);
 
-                    config.AddApplicationInsights(option.InstrumentationKey);
-                    config.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Trace);
+                    if (!option.InstrumentationKey.IsEmpty())
+                    {
+                        config.AddApplicationInsights(option.InstrumentationKey);
+                        config.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Trace);
+                    }
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
